@@ -87,7 +87,7 @@ function Hero() {
       <div className="hero-speed-lines" aria-hidden="true" />
       <div className="hero-art" aria-hidden="true">
         <div className="hero-image-wrap">
-          <img src="/hero.png" alt="" />
+          <img src="/hero.webp" alt="" />
           <HeroCode />
           <div className="hero-code-bubble">{'{ }'}</div>
           <div className="hero-code-burst">CODE<br /><strong>ON!</strong></div>
@@ -125,15 +125,15 @@ function HomePage() {
           </div>
           <div className="about-cards" aria-label="What DCC is built around">
             <article className="about-card about-card-one">
-              <div className="about-card-image"><img src="/1_section2.png" alt="Comic-style championship trophy" /></div>
+              <div className="about-card-image"><img src="/1_section2.webp" alt="Comic-style championship trophy" /></div>
               <h3>Real<br />challenges</h3>
             </article>
             <article className="about-card about-card-two">
-              <div className="about-card-image"><img src="/2_section2.png" alt="Comic-style team fist bump" /></div>
+              <div className="about-card-image"><img src="/2_section2.webp" alt="Comic-style team fist bump" /></div>
               <h3>Team<br />collaboration</h3>
             </article>
             <article className="about-card about-card-three">
-              <div className="about-card-image"><img src="/3_section2.png" alt="Comic-style rocket launch" /></div>
+              <div className="about-card-image"><img src="/3_section2.webp" alt="Comic-style rocket launch" /></div>
               <h3>Level<br />up!</h3>
             </article>
           </div>
@@ -142,14 +142,29 @@ function HomePage() {
 
       <section className="format section" id="format" data-od-id="format">
         <div className="container">
-          <div className="section-head row-between">
-            <div><p className="eyebrow">02 / HOW IT RUNS</p><h2>Three phases.<br />One team.</h2></div>
-            <p className="section-aside">Everything is designed to be clear before the timer starts.</p>
+          <div className="format-intro">
+            <p className="eyebrow format-eyebrow"><strong>02 /</strong> How it runs</p>
+            <div className="format-heading">
+              <h2>Three phases.<br /><em>One team.</em></h2>
+              <div className="format-speech"><p>Everything is designed to be clear before the timer starts.</p></div>
+            </div>
           </div>
           <div className="format-grid">
-            <article className="format-card format-card-dark"><span className="card-index">01</span><div className="card-icon">⌁</div><h3>Register</h3><p>Put your team together, pick a name, and tell us how to reach you.</p><span className="card-label">FORM / OPEN SOON</span></article>
-            <article className="format-card format-card-coral"><span className="card-index">02</span><div className="card-icon">◒</div><h3>Qualify online</h3><p>Solve from wherever you are. The scoreboard tells the story.</p><span className="card-label">ONLINE ROUND</span></article>
-            <article className="format-card format-card-light"><span className="card-index">03</span><div className="card-icon">✦</div><h3>Meet offline</h3><p>The finalists come together in Damietta for the main event.</p><span className="card-label">DAMIETTA / 2026</span></article>
+            <article className="phase-card phase-card-cyan">
+              <span className="phase-index">01</span>
+              <img src="/steps_1.webp" alt="DCC 2026 registration form — form opening soon" />
+            </article>
+            <article className="phase-card phase-card-pink">
+              <span className="phase-index">02</span>
+              <img src="/steps_2.webp" alt="Online qualification laptops and scoreboard — online round" />
+            </article>
+            <article className="phase-card phase-card-yellow">
+              <span className="phase-index">03</span>
+              <img src="/steps_3.webp" alt="Damietta competition venue — Damietta 2026" />
+            </article>
+            <div className="format-team-art" aria-hidden="true">
+              <img src="/steps_4.webp" alt="" />
+            </div>
           </div>
         </div>
       </section>
@@ -180,7 +195,7 @@ function HomePage() {
             <Link to="/register" className="ready-button">Register offline <span aria-hidden="true">↗</span></Link>
           </div>
           <div className="ready-visual">
-            <img className="ready-art" src="/timeline.png" alt="Calendar showing 30 July 2026 beside a DCC cup" />
+            <img className="ready-art" src="/timeline.webp" alt="Calendar showing 30 July 2026 beside a DCC cup" />
             <div className="ready-details">
               <div className="ready-detail">
                 <span className="ready-icon" aria-hidden="true"><FaCalendarDays /></span>
@@ -208,7 +223,7 @@ function HomePage() {
             <div className="footer-socials" aria-label="Social media links"><a href="#" aria-label="Facebook"><FaFacebookF /></a><a href="#" aria-label="X"><FaXTwitter /></a><a href="#" aria-label="Instagram"><FaInstagram /></a><a href="#" aria-label="YouTube"><FaYoutube /></a></div>
           </div>
         </div>
-        <img className="victory-art" src="/footer-trophy.png" alt="DCC champion trophy" />
+        <img className="victory-art" src="/footer-trophy.webp" alt="DCC champion trophy" />
       </footer>
     </>
   )
