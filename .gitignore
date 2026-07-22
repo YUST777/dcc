@@ -7,8 +7,9 @@ public/ChatGPT Image*.png
 
 .env
 .env.*
-!.env.example
 
 *.local
 *.log
 .DS_Store
+.vercel/
+!.env.example

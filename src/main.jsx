@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import ReactDOM from 'react-dom/client'
-import { FaCalendarDays, FaFacebookF, FaInstagram, FaLocationDot, FaXTwitter, FaYoutube } from 'react-icons/fa6'
+import { FaCalendarDays, FaClock, FaFacebookF, FaInstagram, FaLocationDot, FaUserGroup, FaXTwitter, FaYoutube } from 'react-icons/fa6'
 import {
   Link,
   Outlet,
@@ -27,7 +27,13 @@ const registerRoute = createRoute({
   component: RegisterPage,
 })
 
-const routeTree = rootRoute.addChildren([homeRoute, registerRoute])
+const formRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/form',
+  component: RegisterPage,
+})
+
+const routeTree = rootRoute.addChildren([homeRoute, registerRoute, formRoute])
 const router = createRouter({ routeTree })
 
 function DeferredImage({ src, ...props }) {
@@ -74,7 +80,7 @@ function RootLayout() {
             <a href="/#about" onClick={() => setMenuOpen(false)}>About</a>
             <a href="/#format" onClick={() => setMenuOpen(false)}>Format</a>
             <a href="/#rewards" onClick={() => setMenuOpen(false)}>Rewards</a>
-            <Link to="/register" className="nav-cta" onClick={() => setMenuOpen(false)}>Offline sign-up <span aria-hidden="true">↗</span></Link>
+            <Link to="/form" className="nav-cta" onClick={() => setMenuOpen(false)}>Offline sign-up <span aria-hidden="true">↗</span></Link>
           </nav>
         </div>
       </header>
@@ -123,7 +129,7 @@ function Hero() {
             <p>A competitive programming contest for university students who like hard problems, sharp ideas, and a little pressure.</p>
           </div>
           <div className="hero-actions">
-            <Link to="/register" className="hero-button hero-button-primary">Sign up for offline <span aria-hidden="true">↗</span></Link>
+            <Link to="/form" className="hero-button hero-button-primary">Sign up for offline <span aria-hidden="true">↗</span></Link>
             <a href="#about" className="hero-button hero-button-secondary">See how it works <span aria-hidden="true">↓</span></a>
           </div>
         </div>
@@ -213,7 +219,7 @@ function HomePage() {
             <p className="eyebrow ready-kicker"><strong>04 /</strong> Ready?</p>
             <h2>Become part<br /><em>of DCC 2026!</em></h2>
             <p>Gather your team, sharpen your skills, and get ready for an unforgettable experience.</p>
-            <Link to="/register" className="ready-button">Register offline <span aria-hidden="true">↗</span></Link>
+            <Link to="/form" className="ready-button">Register offline <span aria-hidden="true">↗</span></Link>
           </div>
           <div className="ready-visual">
             <DeferredImage className="ready-art" src="/timeline.webp" alt="Calendar showing 30 July 2026 beside a DCC cup" width="900" height="900" />
@@ -235,8 +241,9 @@ function HomePage() {
         <div className="victory-banner">
           <div className="container victory-grid">
             <h2>Code now<br /><em>win big.</em></h2>
-            <div className="victory-copy"><p>The countdown has begun.<br />Don&apos;t just code — dominate.</p><Link to="/register" className="victory-button">Let&apos;s go! <span aria-hidden="true">↗</span></Link></div>
+            <div className="victory-copy"><p>The countdown has begun.<br />Don&apos;t just code — dominate.</p><Link to="/form" className="victory-button">Let&apos;s go! <span aria-hidden="true">↗</span></Link></div>
           </div>
+          <DeferredImage className="victory-art" src="/footer-trophy.webp" alt="DCC champion trophy" width="900" height="900" />
         </div>
         <div className="footer-bottom">
           <div className="container footer-bottom-inner">
@@ -244,7 +251,6 @@ function HomePage() {
             <div className="footer-socials" aria-label="Social media links"><a href="#" aria-label="Facebook"><FaFacebookF /></a><a href="#" aria-label="X"><FaXTwitter /></a><a href="#" aria-label="Instagram"><FaInstagram /></a><a href="#" aria-label="YouTube"><FaYoutube /></a></div>
           </div>
         </div>
-        <DeferredImage className="victory-art" src="/footer-trophy.webp" alt="DCC champion trophy" width="900" height="900" />
       </footer>
     </>
   )
@@ -252,19 +258,145 @@ function HomePage() {
 
 function RegisterPage() {
   const [submitted, setSubmitted] = useState(false)
-  const [form, setForm] = useState({ team: '', captain: '', email: '', university: '', members: '', notes: '' })
+  const [submitting, setSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState('')
+  const [form, setForm] = useState({
+    team: '',
+    university: '',
+    faculty: '',
+    leader: '',
+    email: '',
+    phone: '',
+    universityId: '',
+    terms: false,
+  })
   const update = (event) => setForm({ ...form, [event.target.name]: event.target.value })
-  const submit = (event) => { event.preventDefault(); setSubmitted(true) }
+  const toggle = (event) => setForm({ ...form, [event.target.name]: event.target.checked })
+  const submit = async (event) => {
+    event.preventDefault()
+    setSubmitting(true)
+    setSubmitError('')
+
+    try {
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+      const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+
+      if (!supabaseUrl || !supabaseAnonKey) throw new Error('Registration is not configured yet. Please try again shortly.')
+
+      const response = await fetch(`${supabaseUrl}/rest/v1/registrations`, {
+        method: 'POST',
+        headers: {
+          apikey: supabaseAnonKey,
+          Authorization: `Bearer ${supabaseAnonKey}`,
+          'Content-Type': 'application/json',
+          Prefer: 'return=minimal',
+        },
+        body: JSON.stringify({
+          team_name: form.team.trim(),
+          university: form.university,
+          faculty: form.faculty,
+          team_size: 3,
+          leader_full_name: form.leader.trim(),
+          email: form.email.trim().toLowerCase(),
+          phone: form.phone.trim(),
+          university_id: form.universityId.trim(),
+          consent: form.terms,
+        }),
+      })
+
+      if (!response.ok) throw new Error('Registration could not be submitted. Check the details and try again.')
+
+      setSubmitted(true)
+    } catch (error) {
+      setSubmitError(error instanceof Error ? error.message : 'Registration could not be submitted. Please try again.')
+    } finally {
+      setSubmitting(false)
+    }
+  }
 
   return (
-    <section className="register-page section" data-od-id="register">
-      <div className="container register-layout">
-        <div className="register-copy"><Link to="/" className="back-link">← Back to DCC</Link><p className="eyebrow">OFFLINE SIGN-UP / 2026</p><h1>Reserve your team’s<br /><span>place in the room.</span></h1><p className="lead">Submit your details for the DCC offline practice competition. The organizers will review your team and send the confirmed schedule and next steps.</p><div className="register-aside"><span className="note-star" aria-hidden="true">✦</span><p>One form per team. Final participation is confirmed by the organizers.</p></div></div>
-        <div className="form-card">
-          {submitted ? <div className="success-state"><div className="success-mark">✓</div><p className="eyebrow">SIGN-UP RECEIVED</p><h2>Your team is in review.</h2><p>The DCC organizers will follow up with the confirmed offline schedule and participation details.</p><button className="button button-secondary" onClick={() => setSubmitted(false)}>Add another team</button></div> : <form onSubmit={submit}><div className="form-heading"><span className="mono">OFFLINE FORM / 01</span><h2>Team details.</h2><p>Complete the required information so the organizers can contact your team.</p></div><div className="form-two"><label>Team name<input name="team" value={form.team} onChange={update} placeholder="e.g. Runtime Terrors" required /></label><label>Captain name<input name="captain" value={form.captain} onChange={update} placeholder="Your full name" required /></label></div><div className="form-two"><label>Email<input type="email" name="email" value={form.email} onChange={update} placeholder="you@example.com" required /></label><label>University<input name="university" value={form.university} onChange={update} placeholder="University / institute" required /></label></div><label>Team members<textarea name="members" value={form.members} onChange={update} placeholder="List your teammates, one per line" rows="3" /></label><label>Anything we should know? <span className="optional">optional</span><textarea name="notes" value={form.notes} onChange={update} placeholder="Questions, accessibility needs, or a note for the organizers" rows="3" /></label><button className="button button-primary form-submit" type="submit">Submit offline sign-up <span aria-hidden="true">↗</span></button><p className="form-footnote">Submitting this form does not guarantee a place until the organizers confirm it.</p></form>}
+    <div className="registration-page" data-od-id="registration-page">
+      <section className="registration-hero" data-od-id="registration-hero">
+        <div className="container registration-hero-grid">
+          <div className="registration-copy">
+            <p className="registration-tag"><span aria-hidden="true">★</span> DCC 2026</p>
+            <h1>Register<br /><em>for DCC!</em></h1>
+            <div className="registration-speech">
+              <p>Gather your team, sharpen your skills, and get ready for an unforgettable experience.</p>
+              <a href="#registration-form" className="registration-jump">Start registration <span aria-hidden="true">↓</span></a>
+            </div>
+          </div>
+          <div className="registration-visual" aria-hidden="true">
+            <div className="registration-artboard">
+              <img src="/hero.webp" alt="" width="1400" height="1052" loading="eager" decoding="sync" fetchPriority="high" />
+              <div className="registration-screen">
+                <span><FaUserGroup /></span>
+                <strong>DCC 2026</strong>
+                <em>Registration</em>
+                <i>● ● ●</i>
+              </div>
+              <div className="registration-burst">Be part<br />of something<br /><strong>epic!</strong></div>
+            </div>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+
+      <section id="registration-form" className="registration-form-section" data-od-id="registration-form">
+        <div className="container">
+          <div className="registration-panel">
+            {submitted ? (
+              <div className="registration-success">
+                <div className="success-mark">✓</div>
+                <p className="eyebrow">REGISTRATION RECEIVED</p>
+                <h2>Your team is in review.</h2>
+                <p>The DCC organizers will contact your team leader with confirmation and the final offline instructions.</p>
+                <button className="registration-submit" type="button" onClick={() => setSubmitted(false)}>Register another team <span aria-hidden="true">↗</span></button>
+              </div>
+            ) : (
+              <>
+                <form className="registration-form" onSubmit={submit}>
+                  <fieldset className="registration-group">
+                    <legend><FaUserGroup /> <span>Team information</span></legend>
+                    <label className="registration-field registration-field-wide">Team name<input name="team" value={form.team} onChange={update} placeholder="Enter your team name" required /></label>
+                    <label className="registration-field">University<select name="university" value={form.university} onChange={update} required><option value="">Select your university</option><option>Damietta University</option><option>Mansoura University</option><option>Other university</option></select></label>
+                    <label className="registration-field">Faculty<select name="faculty" value={form.faculty} onChange={update} required><option value="">Select your faculty</option><option>Computers and Artificial Intelligence</option><option>Engineering</option><option>Science</option><option>Other faculty</option></select></label>
+                  </fieldset>
+
+                  <fieldset className="registration-group">
+                    <legend><FaUserGroup /> <span>Team leader information</span></legend>
+                    <label className="registration-field">Full name<input name="leader" value={form.leader} onChange={update} placeholder="Enter full name" required /></label>
+                    <label className="registration-field">Email<input type="email" name="email" value={form.email} onChange={update} placeholder="Enter email address" required /></label>
+                    <label className="registration-field">Phone number<input type="tel" name="phone" value={form.phone} onChange={update} placeholder="+20 10 1234 5678" required /></label>
+                    <label className="registration-field">University ID<input name="universityId" value={form.universityId} onChange={update} placeholder="Enter your university ID" required /></label>
+                  </fieldset>
+
+                  <label className="registration-consent"><input type="checkbox" name="terms" checked={form.terms} onChange={toggle} required /><span>I confirm the submitted information is accurate and agree to the competition rules.</span></label>
+
+                  <div className="registration-actions">
+                    <button className="registration-submit" type="submit" disabled={submitting}>{submitting ? 'Submitting…' : 'Submit registration'} <span aria-hidden="true">↗</span></button>
+                    <p><span aria-hidden="true">✦</span> Double-check the team details before submitting.</p>
+                  </div>
+                  {submitError && <p className="registration-error" role="alert">{submitError}</p>}
+                </form>
+
+                <aside className="registration-info" aria-label="Important competition information">
+                  <h2><em>Important</em><br />information</h2>
+                  <div className="registration-info-item"><FaCalendarDays /><div><small>Date</small><strong>30 July 2026</strong></div></div>
+                  <div className="registration-info-item"><FaLocationDot /><div><small>Location</small><strong>Damietta, Egypt</strong></div></div>
+                  <div className="registration-info-item"><FaUserGroup /><div><small>Team size</small><strong>3 members</strong></div></div>
+                  <div className="registration-info-item"><FaClock /><div><small>Deadline</small><strong>28 July 2026</strong></div></div>
+                  <div className="registration-ready"><span aria-hidden="true">★</span><h3>Get ready!</h3><p>Prepare for challenges, collaboration, and a memorable team experience.</p></div>
+                </aside>
+              </>
+            )}
+          </div>
+        </div>
+      </section>
+
+      <footer className="registration-footer">
+        <div className="container"><img src="/logo.svg" alt="DCC" width="150" height="77" /><span>© 2026 DCC · Damietta Coding Contest</span><div><FaFacebookF /><FaInstagram /><FaYoutube /></div></div>
+      </footer>
+    </div>
   )
 }
 
