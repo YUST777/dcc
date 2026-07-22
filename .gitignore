@@ -1,0 +1,14 @@
+node_modules/
+dist/
+output/
+tmp/
+.playwright-cli/
+public/ChatGPT Image*.png
+
+.env
+.env.*
+!.env.example
+
+*.local
+*.log
+.DS_Store
