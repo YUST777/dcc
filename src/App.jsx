@@ -411,7 +411,7 @@ function RegisterPage() {
       </section>
 
       <footer className="registration-footer">
-        <div className="container"><img src="/logo.svg" alt="DCC" width="150" height="77" /><span>© 2026 DCC · Damietta Coding Contest</span><div><FaFacebookF /><FaInstagram /><FaYoutube /></div></div>
+        <div className="container"><img src="/logo.svg" alt="DCC" width="150" height="77" /><span>© 2026 DCC · Damietta Competitive Contest</span><div><FaFacebookF /><FaInstagram /><FaYoutube /></div></div>
       </footer>
     </div>
   )
