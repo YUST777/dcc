@@ -278,6 +278,19 @@ function RegisterPage() {
     setSubmitError('')
 
     try {
+      const normalizedForm = {
+        team: form.team.trim(),
+        leader: form.leader.trim(),
+        email: form.email.trim().toLowerCase(),
+        phone: form.phone.trim(),
+        universityId: form.universityId.trim(),
+      }
+
+      if (normalizedForm.team.length < 2) throw new Error('Team name must contain at least 2 characters.')
+      if (normalizedForm.leader.length < 2) throw new Error('Team leader name must contain at least 2 characters.')
+      if (normalizedForm.phone.length < 8) throw new Error('Phone number must contain at least 8 characters.')
+      if (normalizedForm.universityId.length < 2) throw new Error('University ID must contain at least 2 characters.')
+
       const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
       const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
@@ -292,19 +305,30 @@ function RegisterPage() {
           Prefer: 'return=minimal',
         },
         body: JSON.stringify({
-          team_name: form.team.trim(),
+          team_name: normalizedForm.team,
           university: form.university,
           faculty: form.faculty,
           team_size: 3,
-          leader_full_name: form.leader.trim(),
-          email: form.email.trim().toLowerCase(),
-          phone: form.phone.trim(),
-          university_id: form.universityId.trim(),
+          leader_full_name: normalizedForm.leader,
+          email: normalizedForm.email,
+          phone: normalizedForm.phone,
+          university_id: normalizedForm.universityId,
           consent: form.terms,
         }),
       })
 
-      if (!response.ok) throw new Error('Registration could not be submitted. Check the details and try again.')
+      if (!response.ok) {
+        const apiError = await response.json().catch(() => null)
+        const constraintErrors = {
+          registrations_team_name_check: 'Team name must contain between 2 and 100 characters.',
+          registrations_leader_full_name_check: 'Team leader name must contain between 2 and 120 characters.',
+          registrations_email_check: 'Enter a valid email address.',
+          registrations_phone_check: 'Phone number must contain between 8 and 30 characters.',
+          registrations_university_id_check: 'University ID must contain between 2 and 80 characters.',
+        }
+        const constraint = Object.keys(constraintErrors).find((name) => apiError?.message?.includes(name))
+        throw new Error(constraint ? constraintErrors[constraint] : 'Registration could not be submitted. Please try again.')
+      }
 
       setSubmitted(true)
     } catch (error) {
@@ -357,17 +381,17 @@ function RegisterPage() {
                 <form className="registration-form" onSubmit={submit}>
                   <fieldset className="registration-group">
                     <legend><FaUserGroup /> <span>Team information</span></legend>
-                    <label className="registration-field registration-field-wide">Team name<input name="team" value={form.team} onChange={update} placeholder="Enter your team name" required /></label>
+                    <label className="registration-field registration-field-wide">Team name<input name="team" value={form.team} onChange={update} placeholder="Enter your team name" minLength="2" maxLength="100" required /></label>
                     <label className="registration-field">University<select name="university" value={form.university} onChange={update} required><option value="">Select your university</option><option>Damietta University</option><option>Mansoura University</option><option>Other university</option></select></label>
                     <label className="registration-field">Faculty<select name="faculty" value={form.faculty} onChange={update} required><option value="">Select your faculty</option><option>Computers and Artificial Intelligence</option><option>Engineering</option><option>Science</option><option>Other faculty</option></select></label>
                   </fieldset>
 
                   <fieldset className="registration-group">
                     <legend><FaUserGroup /> <span>Team leader information</span></legend>
-                    <label className="registration-field">Full name<input name="leader" value={form.leader} onChange={update} placeholder="Enter full name" required /></label>
-                    <label className="registration-field">Email<input type="email" name="email" value={form.email} onChange={update} placeholder="Enter email address" required /></label>
-                    <label className="registration-field">Phone number<input type="tel" name="phone" value={form.phone} onChange={update} placeholder="+20 10 1234 5678" required /></label>
-                    <label className="registration-field">University ID<input name="universityId" value={form.universityId} onChange={update} placeholder="Enter your university ID" required /></label>
+                    <label className="registration-field">Full name<input name="leader" value={form.leader} onChange={update} placeholder="Enter full name" minLength="2" maxLength="120" required /></label>
+                    <label className="registration-field">Email<input type="email" name="email" value={form.email} onChange={update} placeholder="Enter email address" maxLength="254" required /></label>
+                    <label className="registration-field">Phone number<input type="tel" name="phone" value={form.phone} onChange={update} placeholder="+20 10 1234 5678" minLength="8" maxLength="30" required /></label>
+                    <label className="registration-field">University ID<input name="universityId" value={form.universityId} onChange={update} placeholder="Enter your university ID" minLength="2" maxLength="80" required /></label>
                   </fieldset>
 
                   <label className="registration-consent"><input type="checkbox" name="terms" checked={form.terms} onChange={toggle} required /><span>I confirm the submitted information is accurate and agree to the competition rules.</span></label>
