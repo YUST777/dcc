@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import ReactDOM from 'react-dom/client'
 import { FaCalendarDays, FaFacebookF, FaInstagram, FaLocationDot, FaXTwitter, FaYoutube } from 'react-icons/fa6'
 import {
@@ -29,6 +29,32 @@ const registerRoute = createRoute({
 
 const routeTree = rootRoute.addChildren([homeRoute, registerRoute])
 const router = createRouter({ routeTree })
+
+function DeferredImage({ src, ...props }) {
+  const imageRef = useRef(null)
+  const [shouldLoad, setShouldLoad] = useState(false)
+
+  useEffect(() => {
+    const image = imageRef.current
+    if (!image || shouldLoad) return undefined
+
+    if (!('IntersectionObserver' in window)) {
+      setShouldLoad(true)
+      return undefined
+    }
+
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return
+      setShouldLoad(true)
+      observer.disconnect()
+    }, { rootMargin: '350px 0px' })
+
+    observer.observe(image)
+    return () => observer.disconnect()
+  }, [shouldLoad])
+
+  return <img ref={imageRef} src={shouldLoad ? src : undefined} loading="lazy" decoding="async" {...props} />
+}
 
 function RootLayout() {
   const [menuOpen, setMenuOpen] = useState(false)
@@ -120,15 +146,15 @@ function HomePage() {
           </div>
           <div className="about-cards" aria-label="What DCC is built around">
             <article className="about-card about-card-one">
-              <div className="about-card-image"><img src="/1_section2.webp" alt="Comic-style championship trophy" width="900" height="900" loading="lazy" decoding="async" /></div>
+              <div className="about-card-image"><DeferredImage src="/1_section2.webp" alt="Comic-style championship trophy" width="900" height="900" /></div>
               <h3>Real<br />challenges</h3>
             </article>
             <article className="about-card about-card-two">
-              <div className="about-card-image"><img src="/2_section2.webp" alt="Comic-style team fist bump" width="900" height="900" loading="lazy" decoding="async" /></div>
+              <div className="about-card-image"><DeferredImage src="/2_section2.webp" alt="Comic-style team fist bump" width="900" height="900" /></div>
               <h3>Team<br />collaboration</h3>
             </article>
             <article className="about-card about-card-three">
-              <div className="about-card-image"><img src="/3_section2.webp" alt="Comic-style rocket launch" width="900" height="900" loading="lazy" decoding="async" /></div>
+              <div className="about-card-image"><DeferredImage src="/3_section2.webp" alt="Comic-style rocket launch" width="900" height="900" /></div>
               <h3>Level<br />up!</h3>
             </article>
           </div>
@@ -147,18 +173,18 @@ function HomePage() {
           <div className="format-grid">
             <article className="phase-card phase-card-cyan">
               <span className="phase-index">01</span>
-              <img src="/steps_1.webp" alt="DCC 2026 registration form — form opening soon" width="900" height="900" loading="lazy" decoding="async" />
+              <DeferredImage src="/steps_1.webp" alt="DCC 2026 registration form — form opening soon" width="900" height="900" />
             </article>
             <article className="phase-card phase-card-pink">
               <span className="phase-index">02</span>
-              <img src="/steps_2.webp" alt="Online qualification laptops and scoreboard — online round" width="1000" height="1000" loading="lazy" decoding="async" />
+              <DeferredImage src="/steps_2.webp" alt="Online qualification laptops and scoreboard — online round" width="1000" height="1000" />
             </article>
             <article className="phase-card phase-card-yellow">
               <span className="phase-index">03</span>
-              <img src="/steps_3.webp" alt="Damietta competition venue — Damietta 2026" width="1000" height="1000" loading="lazy" decoding="async" />
+              <DeferredImage src="/steps_3.webp" alt="Damietta competition venue — Damietta 2026" width="1000" height="1000" />
             </article>
             <div className="format-team-art" aria-hidden="true">
-              <img src="/steps_4.webp" alt="" width="1000" height="1000" loading="lazy" decoding="async" />
+              <DeferredImage src="/steps_4.webp" alt="" width="1000" height="1000" />
             </div>
           </div>
         </div>
@@ -190,7 +216,7 @@ function HomePage() {
             <Link to="/register" className="ready-button">Register offline <span aria-hidden="true">↗</span></Link>
           </div>
           <div className="ready-visual">
-            <img className="ready-art" src="/timeline.webp" alt="Calendar showing 30 July 2026 beside a DCC cup" width="900" height="900" loading="lazy" decoding="async" />
+            <DeferredImage className="ready-art" src="/timeline.webp" alt="Calendar showing 30 July 2026 beside a DCC cup" width="900" height="900" />
             <div className="ready-details">
               <div className="ready-detail">
                 <span className="ready-icon" aria-hidden="true"><FaCalendarDays /></span>
@@ -214,11 +240,11 @@ function HomePage() {
         </div>
         <div className="footer-bottom">
           <div className="container footer-bottom-inner">
-            <div className="footer-identity"><img src="/logo.svg" alt="DCC" width="150" height="77" loading="lazy" decoding="async" /><span>© 2026 DCC. All rights reserved.</span></div>
+            <div className="footer-identity"><DeferredImage src="/logo.svg" alt="DCC" width="150" height="77" /><span>© 2026 DCC. All rights reserved.</span></div>
             <div className="footer-socials" aria-label="Social media links"><a href="#" aria-label="Facebook"><FaFacebookF /></a><a href="#" aria-label="X"><FaXTwitter /></a><a href="#" aria-label="Instagram"><FaInstagram /></a><a href="#" aria-label="YouTube"><FaYoutube /></a></div>
           </div>
         </div>
-        <img className="victory-art" src="/footer-trophy.webp" alt="DCC champion trophy" width="900" height="900" loading="lazy" decoding="async" />
+        <DeferredImage className="victory-art" src="/footer-trophy.webp" alt="DCC champion trophy" width="900" height="900" />
       </footer>
     </>
   )
