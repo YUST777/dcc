@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import ReactDOM from 'react-dom/client'
-import { AnimatePresence, motion } from 'motion/react'
 import '@fontsource/bangers/400.css'
 import '@fontsource/comic-neue/400.css'
 import '@fontsource/comic-neue/700.css'
 import '@fontsource/dm-mono/400.css'
 import '@fontsource/dm-mono/500.css'
+import { FaCalendarDays, FaFacebookF, FaInstagram, FaLocationDot, FaXTwitter, FaYoutube } from 'react-icons/fa6'
 import {
   Link,
   Outlet,
@@ -52,24 +52,12 @@ function RootLayout() {
           <nav className={menuOpen ? 'main-nav is-open' : 'main-nav'} aria-label="Main navigation">
             <a href="/#about" onClick={() => setMenuOpen(false)}>About</a>
             <a href="/#format" onClick={() => setMenuOpen(false)}>Format</a>
-            <a href="/#faq" onClick={() => setMenuOpen(false)}>FAQ</a>
+            <a href="/#rewards" onClick={() => setMenuOpen(false)}>Rewards</a>
             <Link to="/register" className="nav-cta" onClick={() => setMenuOpen(false)}>Offline sign-up <span aria-hidden="true">↗</span></Link>
           </nav>
         </div>
       </header>
       <main><Outlet /></main>
-      <footer className="footer">
-        <div className="container footer-inner">
-          <div>
-            <div className="footer-brand"><img className="footer-logo" src="/logo.svg" alt="DCC" /></div>
-            <p>Competitive programming, made local.</p>
-          </div>
-          <div className="footer-meta">
-            <span className="mono">DCC / 2026</span>
-            <span>Damietta, Egypt</span>
-          </div>
-        </div>
-      </footer>
     </div>
   )
 }
@@ -124,14 +112,6 @@ function Hero() {
 }
 
 function HomePage() {
-  const [openFaq, setOpenFaq] = useState(3)
-  const faqs = [
-    ['Who can participate?', 'University students in Egypt can form a team and take part. We will publish the exact eligibility rules with the registration form.'],
-    ['What does a team look like?', 'The contest follows the team-based problem-solving format used by collegiate programming competitions. Team details and limits will be confirmed before registration closes.'],
-    ['Is DCC part of ICPC or ECPC?', 'DCC is a local Damietta contest inspired by the same competitive programming format. It is not presented as an official ICPC or ECPC qualifier unless an official partnership is announced.'],
-    ['When is the contest?', 'The current plan places the offline event around 30 July 2026, with online qualifiers around four to five days earlier. Dates are subject to final confirmation.'],
-  ]
-
   return (
     <>
       <Hero />
@@ -163,7 +143,7 @@ function HomePage() {
       <section className="format section" id="format" data-od-id="format">
         <div className="container">
           <div className="section-head row-between">
-            <div><p className="eyebrow">02 / HOW IT RUNS</p><h2>Three beats.<br />One team.</h2></div>
+            <div><p className="eyebrow">02 / HOW IT RUNS</p><h2>Three phases.<br />One team.</h2></div>
             <p className="section-aside">Everything is designed to be clear before the timer starts.</p>
           </div>
           <div className="format-grid">
@@ -174,59 +154,62 @@ function HomePage() {
         </div>
       </section>
 
-      <section className="signal section" data-od-id="offline-signup">
-        <div className="container signal-grid">
-          <div className="signal-copy"><p className="eyebrow">03 / OFFLINE SIGN-UP</p><h2>Get ready for<br /><em>the offline room.</em></h2><p className="lead">The form is your first step. Submit the team details, then wait for the organizers to confirm the final schedule and your place.</p><Link to="/register" className="button signal-button">Open offline sign-up <span aria-hidden="true">↗</span></Link></div>
-          <div className="scoreboard" aria-label="Offline sign-up steps">
-            <div className="score-row"><span className="mono">A</span><strong>Build your team</strong><span className="score-line" /><span className="mono">01</span></div>
-            <div className="score-row"><span className="mono">B</span><strong>Add your university</strong><span className="score-line" /><span className="mono">02</span></div>
-            <div className="score-row"><span className="mono">C</span><strong>Share team contacts</strong><span className="score-line" /><span className="mono">03</span></div>
-            <div className="score-row"><span className="mono">D</span><strong>Receive confirmation</strong><span className="score-line" /><span className="mono">04</span></div>
+      <section className="rewards-section section" id="rewards" data-od-id="rewards">
+        <div className="rewards-dots" aria-hidden="true" />
+        <div className="container rewards-grid">
+          <div className="rewards-copy">
+            <p className="eyebrow"><strong>03 /</strong> Prizes &amp; rewards</p>
+            <h2>Code today for<br /><em>the glory of<br />tomorrow.</em></h2>
+            <a className="rewards-button" href="#ready">Prize details <span aria-hidden="true">↗</span></a>
+          </div>
+          <div className="prize-list" aria-label="Competition prizes">
+            <div className="prize-row"><strong>1st place</strong><span /><b>15,000 EGP</b><i className="star-pink" aria-hidden="true">★</i></div>
+            <div className="prize-row"><strong>2nd place</strong><span /><b>10,000 EGP</b><i className="star-cyan" aria-hidden="true">★</i></div>
+            <div className="prize-row"><strong>3rd place</strong><span /><b>7,000 EGP</b><i className="star-yellow" aria-hidden="true">★</i></div>
+            <div className="prize-row prize-row-special"><strong>Special awards</strong><span /><b>&amp; more</b><i aria-hidden="true">★</i></div>
           </div>
         </div>
       </section>
 
-      <section className="sponsors section" id="partners" data-od-id="partners">
-        <div className="container">
-          <div className="sponsor-heading"><p className="eyebrow">04 / OUR SPONSORS</p><h2>Our sponsors.</h2><p>Supporting DCC’s offline training experience in Ras El Bar and New Damietta.</p></div>
-          <div className="sponsor-logo-row">
-            <article className="sponsor-logo-item"><img src="/iti-logo.png" alt="Information Technology Institute" /><span>Information Technology Institute</span></article>
-            <article className="sponsor-logo-item"><img src="/creativa-logo.png" alt="CREATIVA Innovation Hubs" /><span>CREATIVA Innovation Hubs</span></article>
+      <section className="ready-section" id="ready" data-od-id="ready">
+        <div className="container ready-composition">
+          <div className="ready-copy-panel">
+            <p className="eyebrow ready-kicker"><strong>04 /</strong> Ready?</p>
+            <h2>Become part<br /><em>of DCC 2026!</em></h2>
+            <p>Gather your team, sharpen your skills, and get ready for an unforgettable experience.</p>
+            <Link to="/register" className="ready-button">Register offline <span aria-hidden="true">↗</span></Link>
           </div>
-          <p className="sponsor-branch mono">Ras El Bar · New Damietta</p>
-        </div>
-      </section>
-
-      <section className="campus section" id="campus" data-od-id="campus-network">
-        <div className="container">
-          <div className="campus-heading"><p className="eyebrow">05 / CAMPUS NETWORK</p><h2>One contest,<br /><em>three communities.</em></h2><p>DCC starts by connecting the universities shaping the next generation of technical talent across Damietta.</p></div>
-          <div className="campus-grid">
-            <article className="campus-card campus-pink"><span className="campus-number mono">01</span><strong className="campus-code">DU</strong><div><h3>Damietta University</h3><p>New Damietta · Egypt</p></div></article>
-            <article className="campus-card campus-yellow"><span className="campus-number mono">02</span><strong className="campus-code">DNU</strong><div><h3>Damietta National University</h3><p>New Damietta · Egypt</p></div></article>
-            <article className="campus-card campus-cyan"><span className="campus-number mono">03</span><strong className="campus-code">HUE</strong><div><h3>Horus University</h3><p>New Damietta · Egypt</p></div></article>
-          </div>
-        </div>
-      </section>
-
-      <section className="faq section" id="faq" data-od-id="faq">
-        <div className="container faq-grid">
-          <div><p className="eyebrow">06 / QUESTIONS</p><h2>Before you<br /><em>hit submit.</em></h2><p className="faq-note">Can’t find your answer? Bring it to the organizers and we’ll keep the page updated.</p></div>
-          <div className="faq-list">
-            {faqs.map(([question, answer], index) => (
-              <motion.div className={openFaq === index ? 'faq-item is-open' : 'faq-item'} key={question} layout transition={{ duration: 0.24, ease: 'easeOut' }}>
-                <button onClick={() => setOpenFaq(openFaq === index ? -1 : index)} aria-expanded={openFaq === index}><span>{question}</span><b aria-hidden="true">{openFaq === index ? '−' : '+'}</b></button>
-                <AnimatePresence initial={false}>
-                  {openFaq === index && <motion.div className="faq-answer" initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.24, ease: 'easeOut' }}><p>{answer}</p></motion.div>}
-                </AnimatePresence>
-              </motion.div>
-            ))}
+          <div className="ready-visual">
+            <img className="ready-art" src="/timeline.png" alt="Calendar showing 30 July 2026 beside a DCC cup" />
+            <div className="ready-details">
+              <div className="ready-detail">
+                <span className="ready-icon" aria-hidden="true"><FaCalendarDays /></span>
+                <div><small>Date</small><strong>30 July 2026</strong></div>
+              </div>
+              <div className="ready-detail">
+                <span className="ready-icon" aria-hidden="true"><FaLocationDot /></span>
+                <div><small>Location</small><strong>Damietta, Egypt</strong></div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="cta section" data-od-id="cta">
-        <div className="container cta-inner"><div><p className="eyebrow">07 / YOUR MOVE</p><h2>Ready when<br /><em>you are.</em></h2></div><div className="cta-action"><p>Submit your team for the offline competition and receive confirmation from the DCC organizers.</p><Link to="/register" className="button button-primary">Sign up for offline <span aria-hidden="true">↗</span></Link></div></div>
-      </section>
+      <footer className="site-footer" data-od-id="footer">
+        <div className="victory-banner">
+          <div className="container victory-grid">
+            <h2>Code now<br /><em>win big.</em></h2>
+            <div className="victory-copy"><p>The countdown has begun.<br />Don&apos;t just code — dominate.</p><Link to="/register" className="victory-button">Let&apos;s go! <span aria-hidden="true">↗</span></Link></div>
+          </div>
+        </div>
+        <div className="footer-bottom">
+          <div className="container footer-bottom-inner">
+            <div className="footer-identity"><img src="/logo.svg" alt="DCC" /><span>© 2026 DCC. All rights reserved.</span></div>
+            <div className="footer-socials" aria-label="Social media links"><a href="#" aria-label="Facebook"><FaFacebookF /></a><a href="#" aria-label="X"><FaXTwitter /></a><a href="#" aria-label="Instagram"><FaInstagram /></a><a href="#" aria-label="YouTube"><FaYoutube /></a></div>
+          </div>
+        </div>
+        <img className="victory-art" src="/footer-trophy.png" alt="DCC champion trophy" />
+      </footer>
     </>
   )
 }
