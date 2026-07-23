@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { FaCalendarDays, FaClock, FaFacebookF, FaInstagram, FaLocationDot, FaUserGroup, FaXTwitter, FaYoutube } from 'react-icons/fa6'
+import { FaCalendarDays, FaCircleCheck, FaClock, FaFacebookF, FaLocationDot, FaUserGroup } from 'react-icons/fa6'
 import {
   Link,
   Outlet,
@@ -198,9 +198,9 @@ function HomePage() {
             <a className="rewards-button" href="#ready">Prize details <span aria-hidden="true">↗</span></a>
           </div>
           <div className="prize-list" aria-label="Competition prizes">
-            <div className="prize-row"><strong>1st place</strong><span /><b>15,000 EGP</b><i className="star-pink" aria-hidden="true">★</i></div>
-            <div className="prize-row"><strong>2nd place</strong><span /><b>10,000 EGP</b><i className="star-cyan" aria-hidden="true">★</i></div>
-            <div className="prize-row"><strong>3rd place</strong><span /><b>7,000 EGP</b><i className="star-yellow" aria-hidden="true">★</i></div>
+            <div className="prize-row"><strong>1st place</strong><span /><b className="prize-amount-blurred">15,000 EGP</b><i className="star-pink" aria-hidden="true">★</i></div>
+            <div className="prize-row"><strong>2nd place</strong><span /><b className="prize-amount-blurred">10,000 EGP</b><i className="star-cyan" aria-hidden="true">★</i></div>
+            <div className="prize-row"><strong>3rd place</strong><span /><b className="prize-amount-blurred">7,000 EGP</b><i className="star-yellow" aria-hidden="true">★</i></div>
             <div className="prize-row prize-row-special"><strong>Special awards</strong><span /><b>&amp; more</b><i aria-hidden="true">★</i></div>
           </div>
         </div>
@@ -241,7 +241,7 @@ function HomePage() {
         <div className="footer-bottom">
           <div className="container footer-bottom-inner">
             <div className="footer-identity"><DeferredImage src="/logo.svg" alt="DCC" width="150" height="77" /><span>© 2026 DCC. All rights reserved.</span></div>
-            <div className="footer-socials" aria-label="Social media links"><a href="#" aria-label="Facebook"><FaFacebookF /></a><a href="#" aria-label="X"><FaXTwitter /></a><a href="#" aria-label="Instagram"><FaInstagram /></a><a href="#" aria-label="YouTube"><FaYoutube /></a></div>
+            <div className="footer-socials" aria-label="Social media links"><a href="https://www.facebook.com/profile.php?id=61588726680610" target="_blank" rel="noreferrer" aria-label="DCC on Facebook"><FaFacebookF /></a></div>
           </div>
         </div>
       </footer>
@@ -249,40 +249,74 @@ function HomePage() {
   )
 }
 
+const communities = ['ACPC DU', 'ACPC NDETI', 'ICPC Delta', 'ICPC HUE', 'ICPC NMU']
+const memberTitles = ['Member 1 information', 'Member 2 information', 'Member 3 information']
+
+const createInitialForm = () => ({
+  team: '',
+  members: Array.from({ length: 3 }, () => ({
+    arabicName: '',
+    englishName: '',
+    nationalId: '',
+    email: '',
+    whatsapp: '',
+    community: '',
+  })),
+  terms: false,
+})
+
+function MemberFields({ index, member, onChange }) {
+  const updateMember = (field) => (event) => onChange(index, field, event.target.value)
+
+  return (
+    <fieldset className="registration-group registration-member-group">
+      <legend><FaUserGroup /> <span>{memberTitles[index]}</span></legend>
+      <label className="registration-field">Four-part Arabic name<input dir="rtl" value={member.arabicName} onChange={updateMember('arabicName')} placeholder="Enter the four-part Arabic name" minLength="7" maxLength="160" required /></label>
+      <label className="registration-field">Four-part English name<input value={member.englishName} onChange={updateMember('englishName')} placeholder="Enter the four-part English name" minLength="7" maxLength="160" required /></label>
+      <label className="registration-field">National ID<input inputMode="numeric" value={member.nationalId} onChange={updateMember('nationalId')} placeholder="14-digit national ID" pattern="[0-9]{14}" maxLength="14" required /></label>
+      <label className="registration-field">Gmail<input type="email" value={member.email} onChange={updateMember('email')} placeholder="name@gmail.com" maxLength="254" required /></label>
+      <label className="registration-field">WhatsApp number<input type="tel" value={member.whatsapp} onChange={updateMember('whatsapp')} placeholder="+20 10 1234 5678" minLength="8" maxLength="30" required /></label>
+      <label className="registration-field">Community represented<select value={member.community} onChange={updateMember('community')} required><option value="">Select community</option>{communities.map((community) => <option key={community}>{community}</option>)}</select></label>
+    </fieldset>
+  )
+}
+
 function RegisterPage() {
   const [submitted, setSubmitted] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState('')
-  const [form, setForm] = useState({
-    team: '',
-    university: '',
-    faculty: '',
-    leader: '',
-    email: '',
-    phone: '',
-    universityId: '',
-    terms: false,
-  })
-  const update = (event) => setForm({ ...form, [event.target.name]: event.target.value })
-  const toggle = (event) => setForm({ ...form, [event.target.name]: event.target.checked })
+  const [form, setForm] = useState(createInitialForm)
+  const updateTeam = (event) => setForm((current) => ({ ...current, team: event.target.value }))
+  const updateMember = (index, field, value) => setForm((current) => ({
+    ...current,
+    members: current.members.map((member, memberIndex) => memberIndex === index ? { ...member, [field]: value } : member),
+  }))
+  const toggle = (event) => setForm((current) => ({ ...current, terms: event.target.checked }))
   const submit = async (event) => {
     event.preventDefault()
     setSubmitting(true)
     setSubmitError('')
 
     try {
-      const normalizedForm = {
-        team: form.team.trim(),
-        leader: form.leader.trim(),
-        email: form.email.trim().toLowerCase(),
-        phone: form.phone.trim(),
-        universityId: form.universityId.trim(),
-      }
+      const teamName = form.team.trim()
+      const normalizedMembers = form.members.map((member) => ({
+        arabic_name: member.arabicName.trim(),
+        english_name: member.englishName.trim(),
+        national_id: member.nationalId.trim(),
+        email: member.email.trim().toLowerCase(),
+        whatsapp: member.whatsapp.trim(),
+        community: member.community,
+      }))
 
-      if (normalizedForm.team.length < 2) throw new Error('Team name must contain at least 2 characters.')
-      if (normalizedForm.leader.length < 2) throw new Error('Team leader name must contain at least 2 characters.')
-      if (normalizedForm.phone.length < 8) throw new Error('Phone number must contain at least 8 characters.')
-      if (normalizedForm.universityId.length < 2) throw new Error('University ID must contain at least 2 characters.')
+      if (teamName.length < 2) throw new Error('Team name must contain at least 2 characters.')
+      normalizedMembers.forEach((member, index) => {
+        const memberNumber = index + 1
+        if (member.arabic_name.split(/\s+/).length < 4) throw new Error(`Member ${memberNumber}'s Arabic name must contain four parts.`)
+        if (member.english_name.split(/\s+/).length < 4) throw new Error(`Member ${memberNumber}'s English name must contain four parts.`)
+        if (!/^\d{14}$/.test(member.national_id)) throw new Error(`Member ${memberNumber}'s national ID must contain exactly 14 digits.`)
+        if (member.whatsapp.length < 8) throw new Error(`Member ${memberNumber}'s WhatsApp number is invalid.`)
+        if (!communities.includes(member.community)) throw new Error(`Select a community for member ${memberNumber}.`)
+      })
 
       const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
       const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
@@ -298,14 +332,15 @@ function RegisterPage() {
           Prefer: 'return=minimal',
         },
         body: JSON.stringify({
-          team_name: normalizedForm.team,
-          university: form.university,
-          faculty: form.faculty,
+          team_name: teamName,
+          university: normalizedMembers[0].community,
+          faculty: 'Not collected',
           team_size: 3,
-          leader_full_name: normalizedForm.leader,
-          email: normalizedForm.email,
-          phone: normalizedForm.phone,
-          university_id: normalizedForm.universityId,
+          leader_full_name: normalizedMembers[0].english_name,
+          email: normalizedMembers[0].email,
+          phone: normalizedMembers[0].whatsapp,
+          university_id: normalizedMembers[0].national_id,
+          members: normalizedMembers,
           consent: form.terms,
         }),
       })
@@ -318,6 +353,7 @@ function RegisterPage() {
           registrations_email_check: 'Enter a valid email address.',
           registrations_phone_check: 'Phone number must contain between 8 and 30 characters.',
           registrations_university_id_check: 'University ID must contain between 2 and 80 characters.',
+          registrations_members_check: 'Member information could not be saved. Review all three members and try again.',
         }
         const constraint = Object.keys(constraintErrors).find((name) => apiError?.message?.includes(name))
         throw new Error(constraint ? constraintErrors[constraint] : 'Registration could not be submitted. Please try again.')
@@ -340,6 +376,7 @@ function RegisterPage() {
             <h1>Register<br /><em>for DCC!</em></h1>
             <div className="registration-speech">
               <p>Gather your team, sharpen your skills, and get ready for an unforgettable experience.</p>
+              <p className="registration-free"><FaCircleCheck /> Free registration — no payment required</p>
               <a href="#registration-form" className="registration-jump">Start registration <span aria-hidden="true">↓</span></a>
             </div>
           </div>
@@ -365,33 +402,25 @@ function RegisterPage() {
               <div className="registration-success">
                 <div className="success-mark">✓</div>
                 <p className="eyebrow">REGISTRATION RECEIVED</p>
-                <h2>Your team is in review.</h2>
-                <p>The DCC organizers will contact your team leader with confirmation and the final offline instructions.</p>
-                <button className="registration-submit" type="button" onClick={() => setSubmitted(false)}>Register another team <span aria-hidden="true">↗</span></button>
+                <h2>Your team is registered.</h2>
+                <p>The DCC organizers will contact the team after reviewing and confirming the submitted information.</p>
+                <button className="registration-submit" type="button" onClick={() => { setSubmitted(false); setForm(createInitialForm()) }}>Register another team <span aria-hidden="true">↗</span></button>
               </div>
             ) : (
               <>
                 <form className="registration-form" onSubmit={submit}>
                   <fieldset className="registration-group">
                     <legend><FaUserGroup /> <span>Team information</span></legend>
-                    <label className="registration-field registration-field-wide">Team name<input name="team" value={form.team} onChange={update} placeholder="Enter your team name" minLength="2" maxLength="100" required /></label>
-                    <label className="registration-field">University<select name="university" value={form.university} onChange={update} required><option value="">Select your university</option><option>Damietta University</option><option>Mansoura University</option><option>Other university</option></select></label>
-                    <label className="registration-field">Faculty<select name="faculty" value={form.faculty} onChange={update} required><option value="">Select your faculty</option><option>Computers and Artificial Intelligence</option><option>Engineering</option><option>Science</option><option>Other faculty</option></select></label>
+                    <label className="registration-field registration-field-wide">Team name<input name="team" value={form.team} onChange={updateTeam} placeholder="Enter your team name" minLength="2" maxLength="100" required /></label>
                   </fieldset>
 
-                  <fieldset className="registration-group">
-                    <legend><FaUserGroup /> <span>Team leader information</span></legend>
-                    <label className="registration-field">Full name<input name="leader" value={form.leader} onChange={update} placeholder="Enter full name" minLength="2" maxLength="120" required /></label>
-                    <label className="registration-field">Email<input type="email" name="email" value={form.email} onChange={update} placeholder="Enter email address" maxLength="254" required /></label>
-                    <label className="registration-field">Phone number<input type="tel" name="phone" value={form.phone} onChange={update} placeholder="+20 10 1234 5678" minLength="8" maxLength="30" required /></label>
-                    <label className="registration-field">University ID<input name="universityId" value={form.universityId} onChange={update} placeholder="Enter your university ID" minLength="2" maxLength="80" required /></label>
-                  </fieldset>
+                  {form.members.map((member, index) => <MemberFields key={index} index={index} member={member} onChange={updateMember} />)}
 
-                  <label className="registration-consent"><input type="checkbox" name="terms" checked={form.terms} onChange={toggle} required /><span>I confirm the submitted information is accurate and agree to the competition rules.</span></label>
+                  <label className="registration-consent"><input type="checkbox" name="terms" checked={form.terms} onChange={toggle} required /><span>I confirm that all information is accurate and agree to the competition rules.</span></label>
 
                   <div className="registration-actions">
                     <button className="registration-submit" type="submit" disabled={submitting}>{submitting ? 'Submitting…' : 'Submit registration'} <span aria-hidden="true">↗</span></button>
-                    <p><span aria-hidden="true">✦</span> Double-check the team details before submitting.</p>
+                    <p><span aria-hidden="true">✦</span> Review all three members before submitting.</p>
                   </div>
                   {submitError && <p className="registration-error" role="alert">{submitError}</p>}
                 </form>
@@ -402,6 +431,7 @@ function RegisterPage() {
                   <div className="registration-info-item"><FaLocationDot /><div><small>Location</small><strong>Damietta, Egypt</strong></div></div>
                   <div className="registration-info-item"><FaUserGroup /><div><small>Team size</small><strong>3 members</strong></div></div>
                   <div className="registration-info-item"><FaClock /><div><small>Deadline</small><strong>28 July 2026</strong></div></div>
+                  <div className="registration-info-item"><FaCircleCheck /><div><small>Registration fee</small><strong>Free — no payment required</strong></div></div>
                   <div className="registration-ready"><span aria-hidden="true">★</span><h3>Get ready!</h3><p>Prepare for challenges, collaboration, and a memorable team experience.</p></div>
                 </aside>
               </>
@@ -411,7 +441,7 @@ function RegisterPage() {
       </section>
 
       <footer className="registration-footer">
-        <div className="container"><img src="/logo.svg" alt="DCC" width="150" height="77" /><span>© 2026 DCC · Damietta Competitive Contest</span><div><FaFacebookF /><FaInstagram /><FaYoutube /></div></div>
+        <div className="container"><img src="/logo.svg" alt="DCC" width="150" height="77" /><span>© 2026 DCC · Damietta Competitive Contest</span><div><a href="https://www.facebook.com/profile.php?id=61588726680610" target="_blank" rel="noreferrer" aria-label="DCC on Facebook"><FaFacebookF /></a></div></div>
       </footer>
     </div>
   )

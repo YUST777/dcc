@@ -313,6 +313,7 @@ h1 span, h2 em { color: var(--accent); font-style: normal; }
 .prize-row strong { font-size: clamp(14px, 1.3vw, 19px); letter-spacing: .025em; }
 .prize-row > span { min-width: 40px; border-bottom: 2px dotted color-mix(in oklch, var(--surface) 42%, transparent); transform: translateY(-5px); }
 .prize-row b { min-width: 145px; color: color-mix(in oklch, var(--surface) 82%, var(--fg)); font-size: clamp(13px, 1.25vw, 18px); font-weight: 400; letter-spacing: .08em; text-align: right; }
+.prize-amount-blurred { filter: blur(6px); user-select: none; }
 .prize-row i { font-style: normal; font-size: 17px; }
 .prize-row .star-pink { color: var(--accent); }
 .prize-row .star-cyan { color: var(--accent-cool); }
@@ -417,6 +418,8 @@ h1 span, h2 em { color: var(--accent); font-style: normal; }
 .registration-speech::before { content: ''; position: absolute; left: 27px; bottom: -28px; width: 34px; height: 30px; background: var(--fg); clip-path: polygon(0 0, 100% 0, 12% 100%); }
 .registration-speech::after { content: ''; position: absolute; left: 31px; bottom: -20px; width: 26px; height: 23px; background: var(--surface); clip-path: polygon(0 0, 100% 0, 12% 100%); }
 .registration-speech p { color: var(--fg); font-size: clamp(15px, 1.2vw, 18px); font-weight: 700; line-height: 1.4; }
+.registration-speech .registration-free { display: flex; align-items: center; gap: 8px; margin-top: 13px; color: #087f5b; font-size: 13px; text-transform: uppercase; }
+.registration-free svg { flex: 0 0 auto; width: 17px; height: 17px; fill: currentColor; }
 .registration-jump { display: inline-flex; align-items: center; gap: 22px; margin-top: 16px; padding: 12px 17px 11px; color: var(--surface); background: var(--accent); border: 3px solid var(--fg); box-shadow: 5px 6px 0 var(--fg); font: 700 13px/1 var(--font-body); letter-spacing: .035em; text-transform: uppercase; transition: transform .18s ease, box-shadow .18s ease; }
 .registration-jump span { font-size: 20px; line-height: .6; }
 .registration-jump:hover { transform: translate(-2px, -2px); box-shadow: 7px 8px 0 var(--fg); }
@@ -448,6 +451,8 @@ h1 span, h2 em { color: var(--accent); font-style: normal; }
 .registration-field textarea { min-height: 118px; resize: vertical; }
 .registration-field input:focus, .registration-field select:focus, .registration-field textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
 .registration-field small { color: var(--muted); font-size: 10px; font-weight: 400; text-align: right; text-transform: none; }
+.registration-member-group { padding-top: 4px; }
+.registration-member-group legend { justify-content: flex-start; }
 .registration-consent { display: grid; grid-template-columns: 20px minmax(0, 1fr); align-items: start; gap: 10px; margin-top: 30px; color: var(--muted); font-size: 12px; font-weight: 400; line-height: 1.45; text-transform: none; }
 .registration-consent input { width: 18px; min-height: 18px; margin: 0; accent-color: var(--accent); }
 .registration-actions { display: flex; align-items: center; gap: 24px; margin-top: 34px; }
@@ -480,6 +485,8 @@ h1 span, h2 em { color: var(--accent); font-style: normal; }
 .registration-footer img { width: 76px; filter: invert(1); }
 .registration-footer span { color: color-mix(in oklch, var(--surface) 58%, var(--fg)); font-size: 12px; }
 .registration-footer .container > div { display: flex; gap: 24px; }
+.registration-footer a { display: grid; place-items: center; color: var(--surface); transition: color .18s ease, transform .18s ease; }
+.registration-footer a:hover { color: var(--accent); transform: translateY(-2px); }
 .registration-footer svg { width: 18px; height: 18px; fill: currentColor; }
 
 @media (max-width: 1100px) {
