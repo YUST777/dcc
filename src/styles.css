@@ -56,7 +56,12 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; scrollbar-gutter: stable; scrollbar-color: var(--accent) var(--fg); scrollbar-width: auto; }
+::-webkit-scrollbar { width: 14px; height: 14px; }
+::-webkit-scrollbar-track { background: var(--fg); border-left: 2px solid var(--fg); }
+::-webkit-scrollbar-thumb { min-height: 54px; background: linear-gradient(135deg, var(--accent) 0 72%, var(--accent-cool) 72%); border: 3px solid var(--fg); box-shadow: inset 0 0 0 1px var(--surface); }
+::-webkit-scrollbar-thumb:hover { background: linear-gradient(135deg, var(--highlight) 0 72%, var(--accent) 72%); }
+::-webkit-scrollbar-corner { background: var(--fg); }
 body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--font-body); line-height: 1.55; -webkit-font-smoothing: antialiased; }
 body::selection { background: var(--highlight); color: var(--fg); }
 a { color: inherit; text-decoration: none; }
