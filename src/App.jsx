@@ -249,7 +249,7 @@ function HomePage() {
   )
 }
 
-const communities = ['ACPC DU', 'ACPC NDETI', 'ICPC Delta', 'ICPC HUE', 'ICPC NMU']
+const communities = ['ACPC DU', 'ACPC NDETI', 'ICPC Delta', 'ICPC HUE', 'ICPC NMU', 'IEEE Damietta']
 const memberTitles = ['Member 1 information', 'Member 2 information', 'Member 3 information']
 
 const createInitialForm = () => ({
@@ -260,6 +260,7 @@ const createInitialForm = () => ({
     nationalId: '',
     email: '',
     whatsapp: '',
+    codeforcesHandle: '',
     community: '',
   })),
   terms: false,
@@ -276,6 +277,7 @@ function MemberFields({ index, member, onChange }) {
       <label className="registration-field">National ID<input inputMode="numeric" value={member.nationalId} onChange={updateMember('nationalId')} placeholder="14-digit national ID" pattern="[0-9]{14}" maxLength="14" required /></label>
       <label className="registration-field">Gmail<input type="email" value={member.email} onChange={updateMember('email')} placeholder="name@gmail.com" maxLength="254" required /></label>
       <label className="registration-field">WhatsApp number<input type="tel" value={member.whatsapp} onChange={updateMember('whatsapp')} placeholder="+20 10 1234 5678" minLength="8" maxLength="30" required /></label>
+      <label className="registration-field">Codeforces handle<input value={member.codeforcesHandle} onChange={updateMember('codeforcesHandle')} placeholder="tourist" minLength="2" maxLength="50" required /></label>
       <label className="registration-field">Community represented<select value={member.community} onChange={updateMember('community')} required><option value="">Select community</option>{communities.map((community) => <option key={community}>{community}</option>)}</select></label>
     </fieldset>
   )
@@ -305,6 +307,7 @@ function RegisterPage() {
         national_id: member.nationalId.trim(),
         email: member.email.trim().toLowerCase(),
         whatsapp: member.whatsapp.trim(),
+        codeforces_handle: member.codeforcesHandle.trim(),
         community: member.community,
       }))
 
@@ -315,6 +318,7 @@ function RegisterPage() {
         if (member.english_name.split(/\s+/).length < 4) throw new Error(`Member ${memberNumber}'s English name must contain four parts.`)
         if (!/^\d{14}$/.test(member.national_id)) throw new Error(`Member ${memberNumber}'s national ID must contain exactly 14 digits.`)
         if (member.whatsapp.length < 8) throw new Error(`Member ${memberNumber}'s WhatsApp number is invalid.`)
+        if (member.codeforces_handle.length < 2) throw new Error(`Enter member ${memberNumber}'s Codeforces handle.`)
         if (!communities.includes(member.community)) throw new Error(`Select a community for member ${memberNumber}.`)
       })
 
