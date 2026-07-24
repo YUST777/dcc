@@ -184,63 +184,6 @@ function Hero() {
   )
 }
 
-function FaqSection() {
-  const [openIndex, setOpenIndex] = useState(0)
-
-  const faqs = [
-    {
-      question: 'What is the Damietta Competitive Contest (DCC 2026)?',
-      answer: 'DCC 2026 is Damietta\'s premier competitive programming competition for university students. Teams of three tackle algorithmic and problem-solving challenges inspired by ECPC/ICPC standards.',
-    },
-    {
-      question: 'Who is eligible to participate in DCC 2026?',
-      answer: 'Students enrolled in Damietta University and partner institutions (ACPC DU, ACPC NDETI, ICPC Delta, ICPC HUE, ICPC NMU, and IEEE Damietta) are welcome to form a team and register.',
-    },
-    {
-      question: 'Is registration free of charge?',
-      answer: 'Yes! Offline registration for DCC 2026 is 100% free with no registration or participation fees.',
-    },
-    {
-      question: 'How are teams structured for the competition?',
-      answer: 'Each team consists of exactly 3 members. All team details (Arabic name, English name, National ID, Email, WhatsApp, Codeforces handle, and Community) are submitted during offline registration.',
-    },
-    {
-      question: 'When and where will DCC 2026 take place?',
-      answer: 'The competition will take place on 30 July 2026 in Damietta, Egypt.',
-    },
-  ]
-
-  return (
-    <section className="faq section" id="faq" data-od-id="faq">
-      <div className="container faq-grid">
-        <div className="faq-intro">
-          <p className="eyebrow"><strong>06 /</strong> FAQ</p>
-          <h2>Frequently<br /><em>Asked Questions</em></h2>
-          <p className="faq-note">Got questions about registration, team requirements, or rules? Find quick answers below.</p>
-        </div>
-        <div className="faq-list" role="tablist">
-          {faqs.map((faq, index) => (
-            <div key={index} className="faq-item">
-              <button
-                type="button"
-                aria-expanded={openIndex === index}
-                onClick={() => setOpenIndex(openIndex === index ? -1 : index)}
-              >
-                <span>{faq.question}</span>
-                <b>{openIndex === index ? '−' : '+'}</b>
-              </button>
-              {openIndex === index && (
-                <div className="faq-answer">
-                  <p>{faq.answer}</p>
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  )
-}
 
 function HomePage() {
   useEffect(() => {
@@ -357,12 +300,10 @@ function HomePage() {
         </div>
       </section>
 
-      <FaqSection />
-
       <section className="ready-section" id="ready" data-od-id="ready">
         <div className="container ready-composition">
           <div className="ready-copy-panel">
-            <p className="eyebrow ready-kicker"><strong>07 /</strong> Ready?</p>
+            <p className="eyebrow ready-kicker"><strong>06 /</strong> Ready?</p>
             <h2>Become part<br /><em>of DCC 2026!</em></h2>
             <p>Gather your team, sharpen your skills, and get ready for an unforgettable experience.</p>
             <Link to="/form" className="ready-button">Register offline <span aria-hidden="true">↗</span></Link>
