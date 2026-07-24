@@ -603,13 +603,14 @@ h1 span, h2 em { color: var(--accent); font-style: normal; }
 .yousef-popover-wrapper:hover .yousef-heart { transform: scale(1.25); }
 .yousef-trigger { background: transparent; border: 0; padding: 0 2px; color: #ffffff !important; font-weight: 700; font-family: inherit; font-size: inherit; cursor: pointer; transition: color .18s ease; }
 .yousef-trigger:hover { color: var(--accent-cool) !important; }
-.yousef-card { position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); z-index: 999; width: 185px; padding: 6px; background: #0c0c0c; color: #a1a1aa; border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 12px; box-shadow: 0 16px 36px rgba(0, 0, 0, 0.7), inset 0 1px 1px rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px); font-family: var(--font-mono); animation: yustPopIn .18s cubic-bezier(0.16, 1, 0.3, 1); pointer-events: auto; }
+.yousef-card { position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); z-index: 999; min-width: 195px; width: max-content; padding: 6px; background: #0c0c0c; color: #a1a1aa; border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 12px; box-shadow: 0 16px 36px rgba(0, 0, 0, 0.7), inset 0 1px 1px rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px); font-family: var(--font-mono); animation: yustPopIn .18s cubic-bezier(0.16, 1, 0.3, 1); pointer-events: auto; box-sizing: border-box; }
 .yousef-card::before { content: ''; position: absolute; top: 100%; left: -20px; right: -20px; height: 20px; background: transparent; }
 .yousef-card::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border-width: 6px; border-style: solid; border-color: #0c0c0c transparent transparent transparent; }
 @keyframes yustPopIn { from { opacity: 0; transform: translate(-50%, 6px) scale(0.96); } to { opacity: 1; transform: translate(-50%, 0) scale(1); } }
-.yousef-card-links { display: flex; flex-direction: column; gap: 2px; }
-.yousef-link { display: flex; align-items: center; justify-content: space-between; padding: 8px 10px; border-radius: 8px; color: #a1a1aa !important; font-size: 11px !important; font-family: var(--font-mono) !important; text-decoration: none; background: transparent; white-space: nowrap; transition: all .15s ease; }
-.yousef-link-main { display: inline-flex; align-items: center; gap: 8px; font-size: 11px !important; color: inherit !important; white-space: nowrap; }
-.yousef-link-arrow { font-size: 10px !important; opacity: .5; white-space: nowrap; transition: transform .15s ease, opacity .15s ease; }
-.yousef-link:hover { background: rgba(255, 255, 255, 0.08); color: #ffffff !important; }
-.yousef-link:hover .yousef-link-arrow { opacity: 1; transform: translate(2px, -2px); color: #10b981 !important; }
+.yousef-card-links { display: flex; flex-direction: column; gap: 4px; width: 100%; }
+.yousef-link { display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important; align-items: center !important; justify-content: space-between !important; width: 100% !important; padding: 8px 12px !important; border-radius: 8px !important; color: #a1a1aa !important; font-size: 11px !important; font-family: var(--font-mono) !important; text-decoration: none !important; background: transparent !important; box-sizing: border-box !important; transition: all .15s ease !important; }
+.yousef-link-main { display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important; align-items: center !important; gap: 8px !important; font-size: 11px !important; color: inherit !important; white-space: nowrap !important; line-height: 1 !important; }
+.yousef-link-main svg { display: inline-block !important; width: 14px !important; height: 14px !important; flex-shrink: 0 !important; }
+.yousef-link-arrow { display: inline-block !important; margin-left: 12px !important; font-size: 11px !important; line-height: 1 !important; opacity: .5 !important; flex-shrink: 0 !important; white-space: nowrap !important; transition: transform .15s ease, opacity .15s ease, color .15s ease !important; }
+.yousef-link:hover { background: rgba(255, 255, 255, 0.08) !important; color: #ffffff !important; }
+.yousef-link:hover .yousef-link-arrow { opacity: 1 !important; transform: translate(2px, -2px) !important; color: #10b981 !important; }
