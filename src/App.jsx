@@ -366,12 +366,12 @@ function MemberFields({ index, member, onChange }) {
   return (
     <fieldset className="registration-group registration-member-group">
       <legend><FaUserGroup /> <span>{memberTitles[index]}</span></legend>
-      <label className="registration-field">Four-part Arabic name<input dir="rtl" value={member.arabicName} onChange={updateMember('arabicName')} placeholder="Enter the four-part Arabic name" minLength="7" maxLength="160" required /></label>
-      <label className="registration-field">Four-part English name<input value={member.englishName} onChange={updateMember('englishName')} placeholder="Enter the four-part English name" minLength="7" maxLength="160" required /></label>
+      <label className="registration-field">Four-part Arabic name<input dir="rtl" autoComplete="name" value={member.arabicName} onChange={updateMember('arabicName')} placeholder="الاسم الرباعي باللغة العربية" minLength="7" maxLength="160" required /></label>
+      <label className="registration-field">Four-part English name<input autoComplete="name" value={member.englishName} onChange={updateMember('englishName')} placeholder="Four-part English full name" minLength="7" maxLength="160" required /></label>
       <label className="registration-field">National ID<input inputMode="numeric" value={member.nationalId} onChange={updateMember('nationalId')} placeholder="14-digit national ID" pattern="[0-9]{14}" maxLength="14" required /></label>
-      <label className="registration-field">Gmail<input type="email" value={member.email} onChange={updateMember('email')} placeholder="name@gmail.com" maxLength="254" required /></label>
-      <label className="registration-field">WhatsApp number<input type="tel" value={member.whatsapp} onChange={updateMember('whatsapp')} placeholder="+20 10 1234 5678" minLength="8" maxLength="30" required /></label>
-      <label className="registration-field">Codeforces handle<input value={member.codeforcesHandle} onChange={updateMember('codeforcesHandle')} placeholder="tourist" minLength="2" maxLength="50" required /></label>
+      <label className="registration-field">Gmail / Email address<input type="email" autoComplete="email" value={member.email} onChange={updateMember('email')} placeholder="name@gmail.com" maxLength="254" required /></label>
+      <label className="registration-field">WhatsApp number<input type="tel" autoComplete="tel" value={member.whatsapp} onChange={updateMember('whatsapp')} placeholder="+20 10 1234 5678" minLength="8" maxLength="30" required /></label>
+      <label className="registration-field">Codeforces handle<input autoComplete="off" value={member.codeforcesHandle} onChange={updateMember('codeforcesHandle')} placeholder="e.g. tourist" minLength="2" maxLength="50" required /></label>
       <label className="registration-field">Community represented<select value={member.community} onChange={updateMember('community')} required><option value="">Select community</option>{communities.map((community) => <option key={community}>{community}</option>)}</select></label>
     </fieldset>
   )
@@ -410,14 +410,23 @@ function RegisterPage() {
         community: member.community,
       }))
 
-      if (teamName.length < 2) throw new Error('Team name must contain at least 2 characters.')
+      if (teamName.length < 2 || teamName.length > 100) throw new Error('Team name must contain between 2 and 100 characters.')
       normalizedMembers.forEach((member, index) => {
         const memberNumber = index + 1
-        if (member.arabic_name.split(/\s+/).length < 4) throw new Error(`Member ${memberNumber}'s Arabic name must contain four parts.`)
-        if (member.english_name.split(/\s+/).length < 4) throw new Error(`Member ${memberNumber}'s English name must contain four parts.`)
+        const arabicParts = member.arabic_name.split(/\s+/).filter(Boolean)
+        if (arabicParts.length < 4) throw new Error(`Member ${memberNumber}'s Arabic name must contain four parts.`)
+
+        const englishParts = member.english_name.split(/\s+/).filter(Boolean)
+        if (englishParts.length < 4) throw new Error(`Member ${memberNumber}'s English name must contain four parts.`)
+
         if (!/^\d{14}$/.test(member.national_id)) throw new Error(`Member ${memberNumber}'s national ID must contain exactly 14 digits.`)
-        if (member.whatsapp.length < 8) throw new Error(`Member ${memberNumber}'s WhatsApp number is invalid.`)
-        if (member.codeforces_handle.length < 2) throw new Error(`Enter member ${memberNumber}'s Codeforces handle.`)
+
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(member.email)) throw new Error(`Enter a valid email address for Member ${memberNumber}.`)
+
+        if (!/^[+\d\s-]{8,30}$/.test(member.whatsapp)) throw new Error(`Member ${memberNumber}'s WhatsApp number is invalid.`)
+
+        if (!/^[a-zA-Z0-9_.-]{2,50}$/.test(member.codeforces_handle)) throw new Error(`Member ${memberNumber}'s Codeforces handle contains invalid characters.`)
+
         if (!communities.includes(member.community)) throw new Error(`Select a community for member ${memberNumber}.`)
       })
 
