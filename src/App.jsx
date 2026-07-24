@@ -206,10 +206,26 @@ function HomePage() {
         </div>
       </section>
 
+      <section className="sponsors section" id="sponsors" data-od-id="sponsors">
+        <div className="container">
+          <div className="sponsor-heading">
+            <p className="eyebrow"><strong>04 /</strong> Our sponsor</p>
+            <h2>Built with<br /><em>support.</em></h2>
+            <p>Thanks to the community backing DCC and the next generation of problem solvers.</p>
+          </div>
+          <div className="sponsor-logo-row">
+            <a className="sponsor-logo-item" href="https://www.facebook.com/cskilled" target="_blank" rel="noreferrer" aria-label="CSkilled on Facebook">
+              <img src="/cskilled.webp" alt="CSkilled" width="1200" height="345" />
+              <span>CSkilled</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
       <section className="ready-section" id="ready" data-od-id="ready">
         <div className="container ready-composition">
           <div className="ready-copy-panel">
-            <p className="eyebrow ready-kicker"><strong>04 /</strong> Ready?</p>
+            <p className="eyebrow ready-kicker"><strong>05 /</strong> Ready?</p>
             <h2>Become part<br /><em>of DCC 2026!</em></h2>
             <p>Gather your team, sharpen your skills, and get ready for an unforgettable experience.</p>
             <Link to="/form" className="ready-button">Register offline <span aria-hidden="true">↗</span></Link>
