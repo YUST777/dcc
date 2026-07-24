@@ -4,13 +4,25 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#101824" />
-    <meta name="description" content="DCC — Damietta Competitive Contest. A competitive programming contest for university students in Damietta." />
-    <meta property="og:title" content="DCC — Damietta Competitive Contest" />
-    <meta property="og:description" content="A competitive programming contest for university students in Damietta." />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="DCC Team" />
+    <meta name="description" content="Damietta Competitive Contest (DCC 2026) is Damietta's premier university competitive programming contest. Register your team now and prepare for ECPC." />
+    <link rel="canonical" href="https://dcc-damietta.com/" />
+
+    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="DCC — Damietta Competitive Contest" />
-    <meta name="twitter:description" content="A competitive programming contest for university students in Damietta." />
+    <meta property="og:url" content="https://dcc-damietta.com/" />
+    <meta property="og:site_name" content="Damietta Competitive Contest" />
+    <meta property="og:title" content="DCC 2026 — Damietta Competitive Contest | Official Site" />
+    <meta property="og:description" content="Damietta's top university competitive programming competition. Team up, solve challenges, and qualify for ECPC." />
+    <meta property="og:image" content="https://dcc-damietta.com/hero.webp" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="DCC 2026 — Damietta Competitive Contest | Official Site" />
+    <meta name="twitter:description" content="Damietta's top university competitive programming competition. Team up, solve challenges, and qualify for ECPC." />
+    <meta name="twitter:image" content="https://dcc-damietta.com/hero.webp" />
+
     <link rel="icon" type="image/svg+xml" href="/logo.svg" />
     <link rel="preload" href="/hero.webp" as="image" type="image/webp" fetchpriority="high" />
     <link rel="preload" href="/fonts/bangers-400.woff2" as="font" type="font/woff2" crossorigin />
@@ -18,10 +30,95 @@
     <link rel="preload" href="/fonts/comic-neue-700.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/dm-mono-400.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/dm-mono-500.woff2" as="font" type="font/woff2" crossorigin />
-    <title>DCC — Damietta Competitive Contest</title>
+
+    <title>DCC 2026 — Damietta Competitive Contest | Official Site</title>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://dcc-damietta.com/#organization",
+          "name": "Damietta Competitive Contest",
+          "alternateName": "DCC 2026",
+          "url": "https://dcc-damietta.com/",
+          "logo": "https://dcc-damietta.com/logo.svg",
+          "sameAs": [
+            "https://www.facebook.com/profile.php?id=61588726680610"
+          ]
+        },
+        {
+          "@type": "Event",
+          "@id": "https://dcc-damietta.com/#event",
+          "name": "Damietta Competitive Contest 2026",
+          "startDate": "2026-07-30T09:00:00+02:00",
+          "endDate": "2026-07-30T17:00:00+02:00",
+          "eventStatus": "https://schema.org/EventScheduled",
+          "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+          "location": {
+            "@type": "Place",
+            "name": "Damietta University Venue",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Damietta",
+              "addressCountry": "EG"
+            }
+          },
+          "image": [
+            "https://dcc-damietta.com/hero.webp"
+          ],
+          "description": "A competitive programming contest for university students in Damietta, Egypt.",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "EGP",
+            "availability": "https://schema.org/InStock",
+            "validFrom": "2026-05-01",
+            "url": "https://dcc-damietta.com/form"
+          },
+          "organizer": {
+            "@type": "Organization",
+            "name": "DCC Team & Damietta Universities"
+          }
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://dcc-damietta.com/#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "What is the Damietta Competitive Contest (DCC)?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "DCC is a local practice contest where university students in Damietta solve challenging algorithmic problems in teams and prepare for ECPC."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How many members per team?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Each team consists of exactly 3 university students."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Is there a registration fee for DCC 2026?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No, registration for DCC 2026 is completely free of charge."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
+

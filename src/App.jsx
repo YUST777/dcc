@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { FaCalendarDays, FaCircleCheck, FaClock, FaFacebookF, FaLocationDot, FaUserGroup } from 'react-icons/fa6'
+import { FaCalendarDays, FaCircleCheck, FaClock, FaFacebookF, FaGithub, FaGlobe, FaLinkedin, FaLocationDot, FaUserGroup } from 'react-icons/fa6'
 import {
   Link,
   Outlet,
@@ -82,6 +82,59 @@ function RootLayout() {
   )
 }
 
+function YousefPopover() {
+  const [isOpen, setIsOpen] = useState(false)
+  const timerRef = useRef(null)
+
+  const handleMouseEnter = () => {
+    if (timerRef.current) clearTimeout(timerRef.current)
+    setIsOpen(true)
+  }
+
+  const handleMouseLeave = () => {
+    timerRef.current = setTimeout(() => {
+      setIsOpen(false)
+    }, 250)
+  }
+
+  return (
+    <span
+      className="yousef-popover-wrapper"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      built with <span className="yousef-heart" aria-label="love">❤️</span> by{' '}
+      <button
+        type="button"
+        className="yousef-trigger"
+        onClick={() => setIsOpen((prev) => !prev)}
+        aria-expanded={isOpen}
+        aria-label="Yousef's profiles"
+      >
+        Yousef
+      </button>
+      {isOpen && (
+        <div className="yousef-card" role="tooltip">
+          <div className="yousef-card-links">
+            <a href="https://github.com/YUST777" target="_blank" rel="noreferrer" className="yousef-link">
+              <span className="yousef-link-main"><FaGithub /> GitHub</span>
+              <span className="yousef-link-arrow" aria-hidden="true">↗</span>
+            </a>
+            <a href="https://www.linkedin.com/in/yousefmsm1/" target="_blank" rel="noreferrer" className="yousef-link">
+              <span className="yousef-link-main"><FaLinkedin /> LinkedIn</span>
+              <span className="yousef-link-arrow" aria-hidden="true">↗</span>
+            </a>
+            <a href="https://www.yust.dev/" target="_blank" rel="noreferrer" className="yousef-link">
+              <span className="yousef-link-main"><FaGlobe /> Portfolio</span>
+              <span className="yousef-link-arrow" aria-hidden="true">↗</span>
+            </a>
+          </div>
+        </div>
+      )}
+    </span>
+  )
+}
+
 function HeroCode() {
   return (
     <div className="hero-code" role="presentation">
@@ -131,7 +184,69 @@ function Hero() {
   )
 }
 
+function FaqSection() {
+  const [openIndex, setOpenIndex] = useState(0)
+
+  const faqs = [
+    {
+      question: 'What is the Damietta Competitive Contest (DCC 2026)?',
+      answer: 'DCC 2026 is Damietta\'s premier competitive programming competition for university students. Teams of three tackle algorithmic and problem-solving challenges inspired by ECPC/ICPC standards.',
+    },
+    {
+      question: 'Who is eligible to participate in DCC 2026?',
+      answer: 'Students enrolled in Damietta University and partner institutions (ACPC DU, ACPC NDETI, ICPC Delta, ICPC HUE, ICPC NMU, and IEEE Damietta) are welcome to form a team and register.',
+    },
+    {
+      question: 'Is registration free of charge?',
+      answer: 'Yes! Offline registration for DCC 2026 is 100% free with no registration or participation fees.',
+    },
+    {
+      question: 'How are teams structured for the competition?',
+      answer: 'Each team consists of exactly 3 members. All team details (Arabic name, English name, National ID, Email, WhatsApp, Codeforces handle, and Community) are submitted during offline registration.',
+    },
+    {
+      question: 'When and where will DCC 2026 take place?',
+      answer: 'The competition will take place on 30 July 2026 in Damietta, Egypt.',
+    },
+  ]
+
+  return (
+    <section className="faq section" id="faq" data-od-id="faq">
+      <div className="container faq-grid">
+        <div className="faq-intro">
+          <p className="eyebrow"><strong>06 /</strong> FAQ</p>
+          <h2>Frequently<br /><em>Asked Questions</em></h2>
+          <p className="faq-note">Got questions about registration, team requirements, or rules? Find quick answers below.</p>
+        </div>
+        <div className="faq-list" role="tablist">
+          {faqs.map((faq, index) => (
+            <div key={index} className="faq-item">
+              <button
+                type="button"
+                aria-expanded={openIndex === index}
+                onClick={() => setOpenIndex(openIndex === index ? -1 : index)}
+              >
+                <span>{faq.question}</span>
+                <b>{openIndex === index ? '−' : '+'}</b>
+              </button>
+              {openIndex === index && (
+                <div className="faq-answer">
+                  <p>{faq.answer}</p>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
 function HomePage() {
+  useEffect(() => {
+    document.title = 'DCC 2026 — Damietta Competitive Contest | Official Site'
+  }, [])
+
   return (
     <>
       <Hero />
@@ -211,7 +326,7 @@ function HomePage() {
           <div className="sponsor-heading">
             <p className="eyebrow"><strong>04 /</strong> Our sponsor</p>
             <h2>Built with<br /><em>support.</em></h2>
-            <p>Thanks to the community backing DCC and the next generation of problem solvers.</p>
+            <p>Thanks to CSkilled for supporting DCC and the next generation of problem solvers.</p>
           </div>
           <div className="sponsor-logo-row">
             <a className="sponsor-logo-item" href="https://www.facebook.com/cskilled" target="_blank" rel="noreferrer" aria-label="CSkilled on Facebook">
@@ -222,10 +337,32 @@ function HomePage() {
         </div>
       </section>
 
+      <section className="community-partners section" id="communities" data-od-id="communities">
+        <div className="community-dots" aria-hidden="true" />
+        <div className="container">
+          <div className="community-heading">
+            <div>
+              <p className="eyebrow"><strong>05 /</strong> Community partners</p>
+              <h2>Stronger<br /><em>together.</em></h2>
+            </div>
+            <p>Meet the competitive programming communities that helped bring DCC 2026 to life.</p>
+          </div>
+          <div className="community-grid" aria-label="DCC community partners">
+            <a className="community-card" href="https://www.facebook.com/AcpcDamietta" target="_blank" rel="noreferrer" aria-label="ACPC DU on Facebook"><DeferredImage src="/communities/acpc-du.webp" alt="ACPC Club Damietta University" width="600" height="360" /><span>ACPC DU</span></a>
+            <a className="community-card" href="https://www.facebook.com/profile.php?id=61575481044958" target="_blank" rel="noreferrer" aria-label="ACPC NDETI on Facebook"><DeferredImage src="/communities/acpc-ndeti.webp" alt="ACPC NDETI Community" width="600" height="360" /><span>ACPC NDETI</span></a>
+            <a className="community-card" href="https://www.facebook.com/profile.php?id=61557951950151" target="_blank" rel="noreferrer" aria-label="ICPC Delta on Facebook"><DeferredImage src="/communities/icpc-delta.webp" alt="ICPC Delta Community" width="600" height="360" /><span>ICPC Delta</span></a>
+            <a className="community-card" href="https://www.facebook.com/icpchue" target="_blank" rel="noreferrer" aria-label="ICPC HUE on Facebook"><DeferredImage src="/communities/icpc-hue.webp" alt="ICPC HUE" width="600" height="360" /><span>ICPC HUE</span></a>
+            <a className="community-card" href="https://www.facebook.com/profile.php?id=61582476249151" target="_blank" rel="noreferrer" aria-label="ICPC NMU on Facebook"><DeferredImage src="/communities/icpc-nmu.webp" alt="ICPC NMU" width="600" height="360" /><span>ICPC NMU</span></a>
+          </div>
+        </div>
+      </section>
+
+      <FaqSection />
+
       <section className="ready-section" id="ready" data-od-id="ready">
         <div className="container ready-composition">
           <div className="ready-copy-panel">
-            <p className="eyebrow ready-kicker"><strong>05 /</strong> Ready?</p>
+            <p className="eyebrow ready-kicker"><strong>07 /</strong> Ready?</p>
             <h2>Become part<br /><em>of DCC 2026!</em></h2>
             <p>Gather your team, sharpen your skills, and get ready for an unforgettable experience.</p>
             <Link to="/form" className="ready-button">Register offline <span aria-hidden="true">↗</span></Link>
@@ -256,7 +393,7 @@ function HomePage() {
         </div>
         <div className="footer-bottom">
           <div className="container footer-bottom-inner">
-            <div className="footer-identity"><DeferredImage src="/logo.svg" alt="DCC" width="150" height="77" /><span>© 2026 DCC. All rights reserved.</span></div>
+            <div className="footer-identity"><DeferredImage src="/logo.svg" alt="DCC" width="150" height="77" /><span>© 2026 DCC. All rights reserved. • <YousefPopover /></span></div>
             <div className="footer-socials" aria-label="Social media links"><a href="https://www.facebook.com/profile.php?id=61588726680610" target="_blank" rel="noreferrer" aria-label="DCC on Facebook"><FaFacebookF /></a></div>
           </div>
         </div>
@@ -304,6 +441,11 @@ function RegisterPage() {
   const [submitting, setSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState('')
   const [form, setForm] = useState(createInitialForm)
+
+  useEffect(() => {
+    document.title = 'Offline Registration — DCC 2026 Damietta Competitive Contest'
+  }, [])
+
   const updateTeam = (event) => setForm((current) => ({ ...current, team: event.target.value }))
   const updateMember = (index, field, value) => setForm((current) => ({
     ...current,
@@ -389,6 +531,13 @@ function RegisterPage() {
 
   return (
     <div className="registration-page" data-od-id="registration-page">
+      <nav className="breadcrumbs container" aria-label="Breadcrumb">
+        <ol className="breadcrumb-list">
+          <li><Link to="/">Home</Link></li>
+          <li aria-current="page"><span>Offline Registration</span></li>
+        </ol>
+      </nav>
+
       <section className="registration-hero" data-od-id="registration-hero">
         <div className="container registration-hero-grid">
           <div className="registration-copy">
@@ -461,7 +610,7 @@ function RegisterPage() {
       </section>
 
       <footer className="registration-footer">
-        <div className="container"><img src="/logo.svg" alt="DCC" width="150" height="77" /><span>© 2026 DCC · Damietta Competitive Contest</span><div><a href="https://www.facebook.com/profile.php?id=61588726680610" target="_blank" rel="noreferrer" aria-label="DCC on Facebook"><FaFacebookF /></a></div></div>
+        <div className="container"><img src="/logo.svg" alt="DCC" width="150" height="77" /><span>© 2026 DCC · Damietta Competitive Contest • <YousefPopover /></span><div><a href="https://www.facebook.com/profile.php?id=61588726680610" target="_blank" rel="noreferrer" aria-label="DCC on Facebook"><FaFacebookF /></a></div></div>
       </footer>
     </div>
   )
