@@ -535,3 +535,12 @@ h1 span, h2 em { color: var(--accent); font-style: normal; }
   .registration-info h2, .registration-ready { grid-column: auto; }
   .registration-footer .container { min-height: 145px; align-items: flex-start; flex-direction: column; justify-content: center; gap: 13px; padding-block: 24px; }
 }
+
+/* Compact sponsor block */
+.sponsors { padding-block: clamp(38px, 5vw, 68px); }
+.sponsors .sponsor-heading { margin-bottom: clamp(24px, 3vw, 40px); }
+.sponsors .sponsor-heading h2 { margin-top: 12px; font-size: clamp(34px, 4vw, 56px); }
+.sponsors .sponsor-heading > p:last-child { margin-top: 14px; font-size: 15px; }
+.sponsors .sponsor-logo-item { min-height: 150px; gap: 14px; padding: 24px; }
+.sponsors .sponsor-logo-item img { width: min(100%, 320px); max-height: 96px; }
+.sponsors .sponsor-logo-item span { font-size: 10px; }
