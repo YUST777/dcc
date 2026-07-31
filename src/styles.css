@@ -676,11 +676,12 @@ h1 span, h2 em { color: var(--accent); font-style: normal; }
 
 /* Single-screen registration confirmation */
 .registration-closed-page {
-  height: calc(100dvh - 78px);
+  height: 100dvh;
   min-height: 0;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  padding-top: 78px;
 }
 .registration-closed-layout {
   flex: 1;
@@ -727,14 +728,6 @@ h1 span, h2 em { color: var(--accent); font-style: normal; }
 .closed-time-details strong {
   font-size: 15px;
 }
-.closed-english-details {
-  display: grid;
-  gap: 2px;
-  margin-top: 10px;
-  color: var(--muted);
-  font-size: 11px;
-  line-height: 1.35;
-}
 .round-timer {
   margin-top: 14px;
   padding: 11px 14px 13px;
@@ -752,7 +745,8 @@ h1 span, h2 em { color: var(--accent); font-style: normal; }
 
 @media (max-width: 650px) {
   .registration-closed-page {
-    height: calc(100dvh - 64px);
+    height: 100dvh;
+    padding-top: 64px;
   }
   .registration-closed-layout {
     gap: 22px;

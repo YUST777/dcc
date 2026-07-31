@@ -407,10 +407,6 @@ function RegistrationClosedPage() {
             <div><span>Start time</span><strong>17:00 (05:00 PM)</strong><small>Cairo time</small></div>
             <div><span>Duration</span><strong>3 hours</strong><small>Ends at 20:00 (08:00 PM)</small></div>
           </div>
-          <div className="closed-english-details">
-            <p>Start time: 17:00 (05:00 PM) Cairo time.</p>
-            <p>Competition duration: 3 hours, ending at 20:00 (08:00 PM).</p>
-          </div>
           <OnlineRoundTimer />
         </section>
       </main>
