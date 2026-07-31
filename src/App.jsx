@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { FaCalendarDays, FaCircleCheck, FaClock, FaFacebookF, FaGithub, FaGlobe, FaLinkedin, FaLocationDot, FaUserGroup } from 'react-icons/fa6'
+import { FaCalendarDays, FaFacebookF, FaGithub, FaGlobe, FaLinkedin, FaLocationDot } from 'react-icons/fa6'
 import {
   Link,
   Outlet,
@@ -22,13 +22,13 @@ const homeRoute = createRoute({
 const registerRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/register',
-  component: RegisterPage,
+  component: RegistrationClosedPage,
 })
 
 const formRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/form',
-  component: RegisterPage,
+  component: RegistrationClosedPage,
 })
 
 const routeTree = rootRoute.addChildren([homeRoute, registerRoute, formRoute])
@@ -343,224 +343,82 @@ function HomePage() {
   )
 }
 
-const communities = ['ACPC DU', 'ACPC NDETI', 'ICPC Delta', 'ICPC HUE', 'ICPC NMU', 'IEEE Damietta']
-const memberTitles = ['Member 1 information', 'Member 2 information', 'Member 3 information']
+const ONLINE_ROUND_START = Date.parse('2026-07-31T17:00:00+03:00')
+const ONLINE_ROUND_END = Date.parse('2026-07-31T20:00:00+03:00')
 
-const createInitialForm = () => ({
-  team: '',
-  members: Array.from({ length: 3 }, () => ({
-    arabicName: '',
-    englishName: '',
-    nationalId: '',
-    email: '',
-    whatsapp: '',
-    codeforcesHandle: '',
-    community: '',
-  })),
-  terms: false,
-})
+const formatCountdownPart = (value) => String(value).padStart(2, '0')
 
-function MemberFields({ index, member, onChange }) {
-  const updateMember = (field) => (event) => onChange(index, field, event.target.value)
+function OnlineRoundTimer() {
+  const [now, setNow] = useState(() => Date.now())
+
+  useEffect(() => {
+    const timer = window.setInterval(() => setNow(Date.now()), 1000)
+    return () => window.clearInterval(timer)
+  }, [])
+
+  const isBeforeRound = now < ONLINE_ROUND_START
+  const isRoundLive = now >= ONLINE_ROUND_START && now < ONLINE_ROUND_END
+  const remaining = Math.max(0, (isBeforeRound ? ONLINE_ROUND_START : ONLINE_ROUND_END) - now)
+  const totalSeconds = Math.floor(remaining / 1000)
+  const hours = Math.floor(totalSeconds / 3600)
+  const minutes = Math.floor((totalSeconds % 3600) / 60)
+  const seconds = totalSeconds % 60
+  const status = isBeforeRound ? 'Starts in' : isRoundLive ? 'Live now · ends in' : 'Online round complete'
 
   return (
-    <fieldset className="registration-group registration-member-group">
-      <legend><FaUserGroup /> <span>{memberTitles[index]}</span></legend>
-      <label className="registration-field">Four-part Arabic name<input dir="rtl" autoComplete="name" value={member.arabicName} onChange={updateMember('arabicName')} placeholder="الاسم الرباعي باللغة العربية" minLength="7" maxLength="160" required /></label>
-      <label className="registration-field">Four-part English name<input autoComplete="name" value={member.englishName} onChange={updateMember('englishName')} placeholder="Four-part English full name" minLength="7" maxLength="160" required /></label>
-      <label className="registration-field">National ID<input inputMode="numeric" value={member.nationalId} onChange={updateMember('nationalId')} placeholder="14-digit national ID" pattern="[0-9]{14}" maxLength="14" required /></label>
-      <label className="registration-field">Gmail / Email address<input type="email" autoComplete="email" value={member.email} onChange={updateMember('email')} placeholder="name@gmail.com" maxLength="254" required /></label>
-      <label className="registration-field">WhatsApp number<input type="tel" autoComplete="tel" value={member.whatsapp} onChange={updateMember('whatsapp')} placeholder="+20 10 1234 5678" minLength="8" maxLength="30" required /></label>
-      <label className="registration-field">Codeforces handle<input autoComplete="off" value={member.codeforcesHandle} onChange={updateMember('codeforcesHandle')} placeholder="e.g. tourist" minLength="2" maxLength="50" required /></label>
-      <label className="registration-field">Community represented<select value={member.community} onChange={updateMember('community')} required><option value="">Select community</option>{communities.map((community) => <option key={community}>{community}</option>)}</select></label>
-    </fieldset>
+    <div className={`round-timer ${isRoundLive ? 'round-timer-live' : ''}`} aria-live="polite">
+      <div className="round-timer-heading">
+        <span className="round-timer-dot" aria-hidden="true" />
+        <span>{status}</span>
+      </div>
+      <div className="round-timer-digits" aria-label={`${hours} hours, ${minutes} minutes, ${seconds} seconds`}>
+        <div><strong>{formatCountdownPart(hours)}</strong><span>hours</span></div>
+        <b aria-hidden="true">:</b>
+        <div><strong>{formatCountdownPart(minutes)}</strong><span>minutes</span></div>
+        <b aria-hidden="true">:</b>
+        <div><strong>{formatCountdownPart(seconds)}</strong><span>seconds</span></div>
+      </div>
+    </div>
   )
 }
 
-function RegisterPage() {
-  const [submitted, setSubmitted] = useState(false)
-  const [submitting, setSubmitting] = useState(false)
-  const [submitError, setSubmitError] = useState('')
-  const [form, setForm] = useState(createInitialForm)
-
+function RegistrationClosedPage() {
   useEffect(() => {
-    document.title = 'Offline Registration — DCC 2026 Damietta Competitive Contest'
+    document.title = 'Registration complete — DCC 2026 Damietta Competitive Contest'
   }, [])
 
-  const updateTeam = (event) => setForm((current) => ({ ...current, team: event.target.value }))
-  const updateMember = (index, field, value) => setForm((current) => ({
-    ...current,
-    members: current.members.map((member, memberIndex) => memberIndex === index ? { ...member, [field]: value } : member),
-  }))
-  const toggle = (event) => setForm((current) => ({ ...current, terms: event.target.checked }))
-  const submit = async (event) => {
-    event.preventDefault()
-    setSubmitting(true)
-    setSubmitError('')
-
-    try {
-      const teamName = form.team.trim()
-      const normalizedMembers = form.members.map((member) => ({
-        arabic_name: member.arabicName.trim(),
-        english_name: member.englishName.trim(),
-        national_id: member.nationalId.trim(),
-        email: member.email.trim().toLowerCase(),
-        whatsapp: member.whatsapp.trim(),
-        codeforces_handle: member.codeforcesHandle.trim(),
-        community: member.community,
-      }))
-
-      if (teamName.length < 2 || teamName.length > 100) throw new Error('Team name must contain between 2 and 100 characters.')
-      normalizedMembers.forEach((member, index) => {
-        const memberNumber = index + 1
-        const arabicParts = member.arabic_name.split(/\s+/).filter(Boolean)
-        if (arabicParts.length < 4) throw new Error(`Member ${memberNumber}'s Arabic name must contain four parts.`)
-
-        const englishParts = member.english_name.split(/\s+/).filter(Boolean)
-        if (englishParts.length < 4) throw new Error(`Member ${memberNumber}'s English name must contain four parts.`)
-
-        if (!/^\d{14}$/.test(member.national_id)) throw new Error(`Member ${memberNumber}'s national ID must contain exactly 14 digits.`)
-
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(member.email)) throw new Error(`Enter a valid email address for Member ${memberNumber}.`)
-
-        if (!/^[+\d\s-]{8,30}$/.test(member.whatsapp)) throw new Error(`Member ${memberNumber}'s WhatsApp number is invalid.`)
-
-        if (!/^[a-zA-Z0-9_.-]{2,50}$/.test(member.codeforces_handle)) throw new Error(`Member ${memberNumber}'s Codeforces handle contains invalid characters.`)
-
-        if (!communities.includes(member.community)) throw new Error(`Select a community for member ${memberNumber}.`)
-      })
-
-      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
-      const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
-
-      if (!supabaseUrl || !supabaseAnonKey) throw new Error('Registration is not configured yet. Please try again shortly.')
-
-      const response = await fetch(`${supabaseUrl}/rest/v1/registrations`, {
-        method: 'POST',
-        headers: {
-          apikey: supabaseAnonKey,
-          Authorization: `Bearer ${supabaseAnonKey}`,
-          'Content-Type': 'application/json',
-          Prefer: 'return=minimal',
-        },
-        body: JSON.stringify({
-          team_name: teamName,
-          university: normalizedMembers[0].community,
-          faculty: 'Not collected',
-          team_size: 3,
-          leader_full_name: normalizedMembers[0].english_name,
-          email: normalizedMembers[0].email,
-          phone: normalizedMembers[0].whatsapp,
-          university_id: normalizedMembers[0].national_id,
-          members: normalizedMembers,
-          consent: form.terms,
-        }),
-      })
-
-      if (!response.ok) {
-        const apiError = await response.json().catch(() => null)
-        const constraintErrors = {
-          registrations_team_name_check: 'Team name must contain between 2 and 100 characters.',
-          registrations_leader_full_name_check: 'Team leader name must contain between 2 and 120 characters.',
-          registrations_email_check: 'Enter a valid email address.',
-          registrations_phone_check: 'Phone number must contain between 8 and 30 characters.',
-          registrations_university_id_check: 'University ID must contain between 2 and 80 characters.',
-          registrations_members_check: 'Member information could not be saved. Review all three members and try again.',
-        }
-        const constraint = Object.keys(constraintErrors).find((name) => apiError?.message?.includes(name))
-        throw new Error(constraint ? constraintErrors[constraint] : 'Registration could not be submitted. Please try again.')
-      }
-
-      setSubmitted(true)
-    } catch (error) {
-      setSubmitError(error instanceof Error ? error.message : 'Registration could not be submitted. Please try again.')
-    } finally {
-      setSubmitting(false)
-    }
-  }
-
   return (
-    <div className="registration-page" data-od-id="registration-page">
-      <nav className="breadcrumbs container" aria-label="Breadcrumb">
-        <ol className="breadcrumb-list">
-          <li><Link to="/">Home</Link></li>
-          <li aria-current="page"><span>Offline Registration</span></li>
-        </ol>
-      </nav>
-
-      <section className="registration-hero" data-od-id="registration-hero">
-        <div className="container registration-hero-grid">
-          <div className="registration-copy">
-            <p className="registration-tag"><span aria-hidden="true">★</span> DCC 2026</p>
-            <h1>Register<br /><em>for DCC!</em></h1>
-            <div className="registration-speech">
-              <p>Gather your team, sharpen your skills, and get ready for an unforgettable experience.</p>
-              <p className="registration-free"><FaCircleCheck /> Free registration — no payment required</p>
-              <a href="#registration-form" className="registration-jump">Start registration <span aria-hidden="true">↓</span></a>
-            </div>
+    <div className="registration-closed-page" data-od-id="registration-closed-page">
+      <main className="container registration-closed-layout">
+        <section className="closed-intro" aria-labelledby="closed-title">
+          <p className="eyebrow"><strong>01 /</strong> Registration complete</p>
+          <h1 id="closed-title">Thank you<br /><em>for registering.</em></h1>
+          <p className="closed-lead">Your team is on the list. The next step is the online round.</p>
+          <div className="closed-complete-widget">
+            <span className="closed-check" aria-hidden="true">✓</span>
+            <div><small>PHASE 01 / DONE</small><strong>Offline registration complete</strong><span>Team details received</span></div>
           </div>
-          <div className="registration-visual" aria-hidden="true">
-            <div className="registration-artboard">
-              <img src="/hero.webp" alt="" width="1400" height="1052" loading="eager" decoding="sync" fetchPriority="high" />
-              <div className="registration-screen">
-                <span><FaUserGroup /></span>
-                <strong>DCC 2026</strong>
-                <em>Registration</em>
-                <i>● ● ●</i>
-              </div>
-              <div className="registration-burst">Be part<br />of something<br /><strong>epic!</strong></div>
-            </div>
+        </section>
+
+        <section className="closed-next-step" aria-labelledby="online-round-title">
+          <p className="eyebrow"><strong>02 /</strong> Next step</p>
+          <h2 id="online-round-title">Join the<br /><em>online round.</em></h2>
+          <p>Open your Codeforces account and accept the competition invitation from your alerts or notifications.</p>
+          <a className="closed-codeforces-button" href="https://codeforces.com/" target="_blank" rel="noreferrer">Open Codeforces <span aria-hidden="true">↗</span></a>
+          <div className="closed-time-details">
+            <div><span>Start time</span><strong>17:00 (05:00 PM)</strong><small>Cairo time</small></div>
+            <div><span>Duration</span><strong>3 hours</strong><small>Ends at 20:00 (08:00 PM)</small></div>
           </div>
-        </div>
-      </section>
-
-      <section id="registration-form" className="registration-form-section" data-od-id="registration-form">
-        <div className="container">
-          <div className="registration-panel">
-            {submitted ? (
-              <div className="registration-success">
-                <div className="success-mark">✓</div>
-                <p className="eyebrow">REGISTRATION RECEIVED</p>
-                <h2>Your team is registered.</h2>
-                <p>The DCC organizers will contact the team after reviewing and confirming the submitted information.</p>
-                <button className="registration-submit" type="button" onClick={() => { setSubmitted(false); setForm(createInitialForm()) }}>Register another team <span aria-hidden="true">↗</span></button>
-              </div>
-            ) : (
-              <>
-                <form className="registration-form" onSubmit={submit}>
-                  <fieldset className="registration-group">
-                    <legend><FaUserGroup /> <span>Team information</span></legend>
-                    <label className="registration-field registration-field-wide">Team name<input name="team" value={form.team} onChange={updateTeam} placeholder="Enter your team name" minLength="2" maxLength="100" required /></label>
-                  </fieldset>
-
-                  {form.members.map((member, index) => <MemberFields key={index} index={index} member={member} onChange={updateMember} />)}
-
-                  <label className="registration-consent"><input type="checkbox" name="terms" checked={form.terms} onChange={toggle} required /><span>I confirm that all information is accurate and agree to the competition rules.</span></label>
-
-                  <div className="registration-actions">
-                    <button className="registration-submit" type="submit" disabled={submitting}>{submitting ? 'Submitting…' : 'Submit registration'} <span aria-hidden="true">↗</span></button>
-                    <p><span aria-hidden="true">✦</span> Review all three members before submitting.</p>
-                  </div>
-                  {submitError && <p className="registration-error" role="alert">{submitError}</p>}
-                </form>
-
-                <aside className="registration-info" aria-label="Important competition information">
-                  <h2><em>Important</em><br />information</h2>
-                  <div className="registration-info-item"><FaCalendarDays /><div><small>Date</small><strong>30 July 2026</strong></div></div>
-                  <div className="registration-info-item"><FaLocationDot /><div><small>Location</small><strong>Damietta, Egypt</strong></div></div>
-                  <div className="registration-info-item"><FaUserGroup /><div><small>Team size</small><strong>3 members</strong></div></div>
-                  <div className="registration-info-item"><FaClock /><div><small>Deadline</small><strong>28 July 2026</strong></div></div>
-                  <div className="registration-info-item"><FaCircleCheck /><div><small>Registration fee</small><strong>Free — no payment required</strong></div></div>
-                  <div className="registration-ready"><span aria-hidden="true">★</span><h3>Get ready!</h3><p>Prepare for challenges, collaboration, and a memorable team experience.</p></div>
-                </aside>
-              </>
-            )}
+          <div className="closed-arabic-details" dir="rtl">
+            <p>وقت البداية: الساعة 17:00 (05:00 مساءً) بتوقيت القاهرة.</p>
+            <p>مدة المسابقة: 3 ساعات (تنتهي المعركة في تمام الـ 08:00 مساءً).</p>
           </div>
-        </div>
-      </section>
+          <OnlineRoundTimer />
+        </section>
+      </main>
 
-      <footer className="registration-footer">
-        <div className="container"><img src="/logo.svg" alt="DCC" width="150" height="77" /><span>© 2026 DCC · Damietta Competitive Contest • <YousefPopover /></span><div><a href="https://www.facebook.com/profile.php?id=61588726680610" target="_blank" rel="noreferrer" aria-label="DCC on Facebook"><FaFacebookF /></a></div></div>
+      <footer className="registration-closed-footer">
+        <div className="container"><Link to="/">Back to DCC home <span aria-hidden="true">↗</span></Link><span>DCC 2026 · Damietta, Egypt</span></div>
       </footer>
     </div>
   )
