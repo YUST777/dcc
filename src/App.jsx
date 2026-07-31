@@ -391,7 +391,6 @@ function RegistrationClosedPage() {
     <div className="registration-closed-page" data-od-id="registration-closed-page">
       <main className="container registration-closed-layout">
         <section className="closed-intro" aria-labelledby="closed-title">
-          <p className="eyebrow"><strong>01 /</strong> Registration complete</p>
           <h1 id="closed-title">Thank you<br /><em>for registering.</em></h1>
           <p className="closed-lead">Your team is on the list. The next step is the online round.</p>
           <div className="closed-complete-widget">
@@ -404,14 +403,13 @@ function RegistrationClosedPage() {
           <p className="eyebrow"><strong>02 /</strong> Next step</p>
           <h2 id="online-round-title">Join the<br /><em>online round.</em></h2>
           <p>Open your Codeforces account and accept the competition invitation from your alerts or notifications.</p>
-          <a className="closed-codeforces-button" href="https://codeforces.com/" target="_blank" rel="noreferrer">Open Codeforces <span aria-hidden="true">↗</span></a>
           <div className="closed-time-details">
             <div><span>Start time</span><strong>17:00 (05:00 PM)</strong><small>Cairo time</small></div>
             <div><span>Duration</span><strong>3 hours</strong><small>Ends at 20:00 (08:00 PM)</small></div>
           </div>
-          <div className="closed-arabic-details" dir="rtl">
-            <p>وقت البداية: الساعة 17:00 (05:00 مساءً) بتوقيت القاهرة.</p>
-            <p>مدة المسابقة: 3 ساعات (تنتهي المعركة في تمام الـ 08:00 مساءً).</p>
+          <div className="closed-english-details">
+            <p>Start time: 17:00 (05:00 PM) Cairo time.</p>
+            <p>Competition duration: 3 hours, ending at 20:00 (08:00 PM).</p>
           </div>
           <OnlineRoundTimer />
         </section>
