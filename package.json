@@ -7,7 +7,11 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "email:validate": "node scripts/send-achievement-emails.mjs --validate",
+    "email:preview": "node scripts/send-achievement-emails.mjs --preview",
+    "email:test": "node scripts/send-achievement-emails.mjs --test",
+    "email:send-all": "node scripts/send-achievement-emails.mjs --send-all"
   },
   "dependencies": {
     "@tanstack/react-router": "^1.130.2",
@@ -15,6 +19,7 @@
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-icons": "^5.7.0",
+    "resend": "^6.18.1",
     "roughjs": "^4.6.6"
   },
   "devDependencies": {
