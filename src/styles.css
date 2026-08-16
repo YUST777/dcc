@@ -1639,6 +1639,13 @@ h1 span, h2 em { color: var(--accent); font-style: normal; }
   gap: 4px;
 }
 .winner-archive-link:hover { color: var(--accent); border-color: var(--accent); }
+.winners-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: clamp(16px, 2.5vw, 32px);
+  flex-wrap: wrap;
+}
 .winners-board { min-width: 0; display: grid; gap: clamp(18px, 2.5vh, 26px); }
 
 .results-section {

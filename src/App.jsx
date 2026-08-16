@@ -282,6 +282,19 @@ const allTeamPhotos = [
   '/teams/tom08611.webp',
 ]
 
+const allFirstSolverPhotos = [
+  '/first_solvers/first_solve_01.webp',
+  '/first_solvers/first_solve_02.webp',
+  '/first_solvers/first_solve_03.webp',
+  '/first_solvers/first_solve_04.webp',
+  '/first_solvers/first_solve_05.webp',
+  '/first_solvers/first_solve_06.webp',
+  '/first_solvers/first_solve_07.webp',
+  '/first_solvers/first_solve_08.webp',
+  '/first_solvers/first_solve_09.webp',
+  '/first_solvers/first_solve_10.webp',
+]
+
 function DeferredImage({ src, ...props }) {
   const imageRef = useRef(null)
   const [shouldLoad, setShouldLoad] = useState(() => typeof window === 'undefined' || !('IntersectionObserver' in window))
@@ -581,7 +594,7 @@ function MemoryLightbox({ photos, initialIndex = 0, title = '★ DCC 2026', onCl
           <div className="lightbox-filmstrip-wrap">
             <div className="lightbox-filmstrip" role="tablist" aria-label="Photo thumbnails">
               {photos.map((src, idx) => {
-                const thumbSrc = src.replace(/\/(memories|teams)\//, '/$1/thumbs/')
+                const thumbSrc = src.replace(/\/(memories|teams|first_solvers)\//, '/$1/thumbs/')
                 return (
                   <button
                     key={src}
@@ -764,14 +777,24 @@ function HomePage() {
                 </article>
               ))}
             </div>
-            <button
-              type="button"
-              className="winner-archive-link"
-              onClick={() => openGallery(allTeamPhotos, 0, '★ DCC 2026 TEAMS')}
-              aria-label="View all participating teams gallery"
-            >
-              View all participating teams <span aria-hidden="true">↗</span>
-            </button>
+            <div className="winners-actions">
+              <button
+                type="button"
+                className="winner-archive-link"
+                onClick={() => openGallery(allFirstSolverPhotos, 0, '★ DCC 2026 FIRST SOLVERS')}
+                aria-label="View first solvers photo gallery"
+              >
+                First solvers <span aria-hidden="true">↗</span>
+              </button>
+              <button
+                type="button"
+                className="winner-archive-link"
+                onClick={() => openGallery(allTeamPhotos, 0, '★ DCC 2026 TEAMS')}
+                aria-label="View all participating teams gallery"
+              >
+                View all participating teams <span aria-hidden="true">↗</span>
+              </button>
+            </div>
           </div>
         </div>
       </section>
